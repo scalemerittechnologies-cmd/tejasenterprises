@@ -16,4 +16,4 @@ The logo and office photos supplied by Tejas Enterprises are in `public/images/t
 
 The video section plays the supplied Tejas reel from `public/videos/tejas-shop.mp4` with a matching portrait poster. The previous video is preserved in `archive/previous-shop.mp4` and is not published on the website.
 
-The admin dashboard, enquiry storage and optional Google Sheets integration require deployment configuration. See `ADMIN_SETUP.md` and `docs/CLOUDFLARE_NETLIFY_SETUP.md`.
+The admin dashboard publishes content and uploaded photos to GitHub. Each save creates a commit and triggers the hosting deploy. Quote forms open WhatsApp directly and do not store enquiries. See [the GitHub publishing setup](docs/NEW_GITHUB_NETLIFY_DEPLOY.md).

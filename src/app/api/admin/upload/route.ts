@@ -3,11 +3,11 @@ import sharp from 'sharp'
 import { NextResponse } from 'next/server'
 import { isAdminAuthenticated } from '@/lib/admin-auth'
 import { saveUploadedImage } from '@/lib/site-content'
-import { maxD1ImageBytes } from '@/lib/cloudflare-media'
 import { hasAllowedOrigin } from '@/lib/request-origin'
 
 export const runtime = 'nodejs'
 const maxBytes = 4 * 1024 * 1024
+const maxOptimizedImageBytes = 1_250_000
 
 export async function POST(request: Request) {
   if (!hasAllowedOrigin(request)) return NextResponse.json({ error: 'Invalid request origin.' }, { status: 403 })
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Upload a valid JPEG, PNG, WebP or AVIF image.' }, { status: 415 })
     }
     output = Buffer.alloc(0)
-    const targetBytes = maxD1ImageBytes
+    const targetBytes = maxOptimizedImageBytes
     for (const [side, quality] of [[1800, 82], [1600, 76], [1400, 70], [1200, 64], [1000, 58], [900, 50]]) {
       output = await sharp(source, { limitInputPixels: 40_000_000, failOn: 'error' })
         .rotate()

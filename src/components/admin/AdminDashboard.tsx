@@ -1,6 +1,5 @@
 'use client'
 
-import { EnquiryManager } from './EnquiryManager'
 import { ExperienceEditor } from './ExperienceEditor'
 import { LanguageSwitcher } from '@/components/language/LanguageProvider'
 import { createContext, useContext, useMemo, useState } from 'react'
@@ -13,9 +12,8 @@ import type { PendingUpload } from '@/lib/github-content'
 
 const PhotoPreviewContext = createContext<Record<string, string>>({})
 
-type Section = 'enquiries' | 'overview' | 'brand' | 'media' | 'calculator' | 'contact'
+type Section = 'overview' | 'brand' | 'media' | 'calculator' | 'contact'
 const nav: { id: Section; label: string; icon: typeof LayoutDashboard; hint?: string }[] = [
-  { id: 'enquiries', label: 'Enquiries / पूछताछ', icon: Settings2 },
   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
   { id: 'brand', label: 'Website content', icon: Store, hint: 'Brand & hero' },
   { id: 'media', label: 'Photos & products', icon: ImagePlus },
@@ -102,7 +100,6 @@ export function AdminDashboard({ initialContent, adminId }: { initialContent: Si
       <header className="admin-topbar"><div><div className="admin-crumb">Tejas workspace <ChevronRight size={14}/><b>{selected.label}</b></div><p>Manage what your customers see on the {content.brand} website.</p></div><div className="admin-header-actions"><LanguageSwitcher/><span className="admin-live"><i/> Dashboard secure</span><button type="button" className="publish-button" onClick={save} disabled={!dirty || saving || Boolean(uploading)}><Save size={16}/>{saving ? 'Publishing…' : 'Save & publish'}</button><button type="button" className="admin-lock-button" onClick={() => void saveAndLock()} disabled={saving || Boolean(uploading)}><LockKeyhole size={16}/><span>{dirty ? 'Save & lock' : 'Lock dashboard'}</span></button></div></header>
       <div className="admin-content">
         {notice && <div className={`admin-notice ${notice.kind}`} role="status">{notice.kind === 'success' ? <Check size={17}/> : <CircleHelp size={17}/>} {notice.text}<button type="button" onClick={() => setNotice(null)} aria-label="Dismiss notification">×</button></div>}
-        {section === 'enquiries' && <EnquiryManager/>}
         {section === 'overview' && <Overview content={content} imageCount={imageCount} onSelect={setSection}/>}
         {section === 'brand' && <ExperienceEditor content={content} update={update}/>}
         {section === 'brand' && <BrandEditor content={content} update={update} upload={upload} uploading={uploading}/>}
