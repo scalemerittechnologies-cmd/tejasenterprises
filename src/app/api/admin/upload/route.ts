@@ -41,8 +41,8 @@ export async function POST(request: Request) {
   }
   const filename = `${randomUUID()}.webp`
   try {
-    const url = await saveUploadedImage(filename, output)
-    return NextResponse.json({ ok: true, url, bytes: output.byteLength })
+    const uploaded = await saveUploadedImage(filename, output)
+    return NextResponse.json({ ok: true, ...uploaded, bytes: output.byteLength })
   } catch {
     return NextResponse.json({ error: 'The image was processed but could not be saved. Check the configured media storage.' }, { status: 503 })
   }

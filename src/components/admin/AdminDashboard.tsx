@@ -3,10 +3,15 @@
 import { EnquiryManager } from './EnquiryManager'
 import { ExperienceEditor } from './ExperienceEditor'
 import { LanguageSwitcher } from '@/components/language/LanguageProvider'
-import { useMemo, useState } from 'react'
+import { createContext, useContext, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowDown, ArrowDownToLine, ArrowRight, ArrowUp, Banknote, Boxes, Check, ChevronRight, CircleHelp, House, ImagePlus, LayoutDashboard, LockKeyhole, LogOut, MapPin, Package, Plus, Save, Settings2, ShieldCheck, ShoppingBag, Store, Trash2, Upload, WalletCards } from 'lucide-react'
 import type { Product, Project, ProjectCategory, SiteContent, Solution } from '@/lib/site-content'
+import { LocationMapPreview } from '@/components/location/LocationMapPreview'
+import { GOOGLE_BUSINESS_PROFILE_URL } from '@/lib/location'
+import type { PendingUpload } from '@/lib/github-content'
+
+const PhotoPreviewContext = createContext<Record<string, string>>({})
 
 type Section = 'enquiries' | 'overview' | 'brand' | 'media' | 'calculator' | 'contact'
 const nav: { id: Section; label: string; icon: typeof LayoutDashboard; hint?: string }[] = [
@@ -25,6 +30,8 @@ export function AdminDashboard({ initialContent, adminId }: { initialContent: Si
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState<string | null>(null)
   const [notice, setNotice] = useState<{ kind: 'success' | 'error'; text: string } | null>(null)
+  const [pendingUploads, setPendingUploads] = useState<PendingUpload[]>([])
+  const [photoPreviews, setPhotoPreviews] = useState<Record<string, string>>({})
   const router = useRouter()
 
   const update = <K extends keyof SiteContent>(key: K, value: SiteContent[K]) => { setContent(current => ({ ...current, [key]: value })); setDirty(true); setNotice(null) }
@@ -42,8 +49,12 @@ export function AdminDashboard({ initialContent, adminId }: { initialContent: Si
       const { prepareImageUpload } = await import('@/lib/prepare-image-upload')
       const form = new FormData(); form.set('file', await prepareImageUpload(file))
       const response = await fetch('/api/admin/upload', { method: 'POST', body: form })
-      const result = await response.json() as { url?: string; error?: string }
+      const result = await response.json() as { url?: string; sha?: string; error?: string }
       if (!response.ok || !result.url) throw new Error(result.error ?? 'Upload failed.')
+      if (result.sha) {
+        setPendingUploads(current => [...current, { url: result.url!, sha: result.sha! }])
+        setPhotoPreviews(current => ({ ...current, [result.url!]: URL.createObjectURL(file) }))
+      }
       apply(result.url); setNotice({ kind: 'success', text: `${file.name} uploaded. Save & publish to put it on the website.` })
     } catch (error) { setNotice({ kind: 'error', text: error instanceof Error ? error.message : 'Could not upload that image.' }) }
     finally { setUploading(null) }
@@ -52,10 +63,12 @@ export function AdminDashboard({ initialContent, adminId }: { initialContent: Si
   async function save() {
     setSaving(true); setNotice(null)
     try {
-      const response = await fetch('/api/admin/content', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(content) })
-      const result = await response.json() as { error?: string }
+      const referenced = new Set([content.heroPhoto, content.showroomPhoto, ...content.projects.map(x => x.image), ...content.solutions.map(x => x.image), ...content.products.map(x => x.image)])
+      const response = await fetch('/api/admin/content', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...content, pendingUploads: pendingUploads.filter(upload => referenced.has(upload.url)) }) })
+      const result = await response.json() as { error?: string; mode?: string }
       if (!response.ok) throw new Error(result.error ?? 'Could not save changes.')
-      setDirty(false); setNotice({ kind: 'success', text: 'Changes published to the public website.' })
+      setPendingUploads([])
+      setDirty(false); setNotice({ kind: 'success', text: result.mode === 'github' ? 'Saved to GitHub. Vercel deployment is starting; the live website will update after the build finishes.' : 'Changes published to the public website.' })
       return true
     } catch (error) { setNotice({ kind: 'error', text: error instanceof Error ? error.message : 'Could not save changes.' }) }
     finally { setSaving(false) }
@@ -63,7 +76,7 @@ export function AdminDashboard({ initialContent, adminId }: { initialContent: Si
   }
 
   async function logout() {
-    sessionStorage.removeItem('awadh-admin-tab-session')
+    sessionStorage.removeItem('tejas-admin-tab-session')
     await fetch('/api/admin/logout', { method: 'POST' })
     router.replace('/admin/login'); router.refresh()
   }
@@ -75,9 +88,9 @@ export function AdminDashboard({ initialContent, adminId }: { initialContent: Si
   }
 
   const selected = nav.find(item => item.id === section)!
-  return <div className="admin-shell">
+  return <PhotoPreviewContext.Provider value={photoPreviews}><div className="admin-shell">
     <aside className="admin-sidebar">
-      <a href="/" className="admin-brand"><span className="admin-brand-icon">☀</span><span><b>AWADH</b><small>ENTERPRISES</small></span></a>
+      <a href="/" className="admin-brand"><span className="admin-brand-icon">☀</span><span><b>TEJAS</b><small>ENTERPRISES</small></span></a>
       <div className="admin-workspace-label">WORKSPACE</div>
       <nav className="admin-side-nav" aria-label="Dashboard sections">{nav.map(({ id, label, icon: Icon, hint }) => <button type="button" key={id} className={section === id ? 'selected' : ''} onClick={() => { setSection(id); setNotice(null) }}><Icon size={18}/><span>{label}{hint && <small>{hint}</small>}</span>{section === id && <ChevronRight className="nav-chevron" size={15}/>}</button>)}</nav>
       <div className="sidebar-spacer"/>
@@ -86,7 +99,7 @@ export function AdminDashboard({ initialContent, adminId }: { initialContent: Si
       <div className="admin-user"><span>{adminId.slice(0,1).toUpperCase()}</span><div><b>{adminId}</b><small>Website administrator</small></div><ShieldCheck size={16}/></div>
     </aside>
     <main className="admin-main">
-      <header className="admin-topbar"><div><div className="admin-crumb">Awadh workspace <ChevronRight size={14}/><b>{selected.label}</b></div><p>Manage what your customers see on the {content.brand} website.</p></div><div className="admin-header-actions"><LanguageSwitcher/><span className="admin-live"><i/> Dashboard secure</span><button type="button" className="publish-button" onClick={save} disabled={!dirty || saving || Boolean(uploading)}><Save size={16}/>{saving ? 'Publishing…' : 'Save & publish'}</button><button type="button" className="admin-lock-button" onClick={() => void saveAndLock()} disabled={saving || Boolean(uploading)}><LockKeyhole size={16}/><span>{dirty ? 'Save & lock' : 'Lock dashboard'}</span></button></div></header>
+      <header className="admin-topbar"><div><div className="admin-crumb">Tejas workspace <ChevronRight size={14}/><b>{selected.label}</b></div><p>Manage what your customers see on the {content.brand} website.</p></div><div className="admin-header-actions"><LanguageSwitcher/><span className="admin-live"><i/> Dashboard secure</span><button type="button" className="publish-button" onClick={save} disabled={!dirty || saving || Boolean(uploading)}><Save size={16}/>{saving ? 'Publishing…' : 'Save & publish'}</button><button type="button" className="admin-lock-button" onClick={() => void saveAndLock()} disabled={saving || Boolean(uploading)}><LockKeyhole size={16}/><span>{dirty ? 'Save & lock' : 'Lock dashboard'}</span></button></div></header>
       <div className="admin-content">
         {notice && <div className={`admin-notice ${notice.kind}`} role="status">{notice.kind === 'success' ? <Check size={17}/> : <CircleHelp size={17}/>} {notice.text}<button type="button" onClick={() => setNotice(null)} aria-label="Dismiss notification">×</button></div>}
         {section === 'enquiries' && <EnquiryManager/>}
@@ -97,9 +110,9 @@ export function AdminDashboard({ initialContent, adminId }: { initialContent: Si
         {section === 'calculator' && <CalculatorEditor content={content} update={update}/>}
         {section === 'contact' && <ContactEditor content={content} update={update}/>}
       </div>
-      <footer className="admin-footer"><span>Changes are saved on this website’s server.</span><span>Signed in as <b>{adminId}</b></span></footer>
+      <footer className="admin-footer"><span>Website changes are saved through the configured publishing service.</span><span>Signed in as <b>{adminId}</b></span></footer>
     </main>
-  </div>
+  </div></PhotoPreviewContext.Provider>
 }
 
 function moveItem<T,>(items: T[], index: number, delta: number): T[] {
@@ -113,22 +126,24 @@ function moveItem<T,>(items: T[], index: number, delta: number): T[] {
 function SectionIntro({ eyebrow, title, text }: { eyebrow: string; title: string; text: string }) { return <div className="admin-section-intro"><span>{eyebrow}</span><h1>{title}</h1><p>{text}</p></div> }
 
 function Overview({ content, imageCount, onSelect }: { content: SiteContent; imageCount: number; onSelect: (s: Section) => void }) {
+  const previews = useContext(PhotoPreviewContext)
   return <><div className="admin-welcome"><div><span className="welcome-label">YOUR BUSINESS · YOUR WEBSITE</span><h1>Good day. Let’s make your storefront shine.</h1><p>Update your store photo, solar products and customer-facing details in one place.</p></div><span className="welcome-sun">☀</span></div>
     <div className="admin-stat-grid"><Stat icon={ImagePlus} label="Website images" value={imageCount.toString()} foot="Ready to manage"/><Stat icon={ShoppingBag} label="Products listed" value={content.products.length.toString()} foot="Shown on your website"/><Stat icon={House} label="Solar solutions" value={content.solutions.length.toString()} foot="Customer categories"/><Stat icon={WalletCards} label="Costing assumptions" value="5" foot="Editable estimate inputs"/></div>
-    <div className="overview-grid"><section className="admin-panel preview-panel"><div className="panel-heading"><div><span>LIVE BRAND PREVIEW</span><h2>Your storefront photo</h2></div><button type="button" className="subtle-link" onClick={() => onSelect('media')}>Manage photos <ArrowRight size={15}/></button></div><div className="storefront-preview"><img src={content.showroomPhoto} alt="Current Awadh Enterprises storefront"/><div><span>AWADH ENTERPRISES · MIRZAPUR</span><b>{content.address}</b><small>{content.phone}</small></div></div><p className="preview-caption">This is the real storefront photo you shared. Replace it whenever you have a new one.</p></section>
+    <div className="overview-grid"><section className="admin-panel preview-panel"><div className="panel-heading"><div><span>LIVE BRAND PREVIEW</span><h2>Your office photo</h2></div><button type="button" className="subtle-link" onClick={() => onSelect('media')}>Manage photos <ArrowRight size={15}/></button></div><div className="storefront-preview"><img src={previews[content.showroomPhoto] ?? content.showroomPhoto} alt="Current Tejas Enterprises office banner"/><div><span>TEJAS ENTERPRISES · PRAYAGRAJ</span><b>{content.address}</b><small>{content.phone}</small></div></div><p className="preview-caption">This is the office banner photo you shared. Replace it whenever you have a new one.</p></section>
     <section className="admin-panel quick-panel"><div className="panel-heading"><div><span>QUICK ACCESS</span><h2>What would you like to update?</h2></div></div><div className="quick-actions"><Quick icon={Store} title="Homepage copy & hero" desc="Edit headline, introduction and hero photo" onClick={() => onSelect('brand')}/><Quick icon={Boxes} title="Products & photos" desc="Change images, names and descriptions" onClick={() => onSelect('media')}/><Quick icon={Banknote} title="Solar estimate settings" desc="Tune panel, output and cost assumptions" onClick={() => onSelect('calculator')}/><Quick icon={MapPin} title="Store contact details" desc="Keep your phone and location current" onClick={() => onSelect('contact')}/></div></section></div>
-    <div className="admin-persistence-note"><ShieldCheck size={19}/><span><b>Private dashboard · signed-in admin only</b><small>On the live website, saved edits, enquiries and uploaded photos are stored in Cloudflare D1.</small></span></div>
+    <section className="admin-panel admin-location-panel"><div><span className="admin-location-eyebrow">STORE LOCATION</span><h2>Tejas Enterprises on Maps</h2><a href={GOOGLE_BUSINESS_PROFILE_URL} target="_blank" rel="noopener noreferrer" className="admin-location-address"><MapPin size={16}/>{content.address}</a></div><LocationMapPreview className="admin-map-preview"/></section>
+    <div className="admin-persistence-note"><ShieldCheck size={19}/><span><b>Private dashboard · signed-in admin only</b><small>Photo and content updates are published through the configured storage and deployment service.</small></span></div>
   </>
 }
 function Stat({ icon: Icon, label, value, foot }: { icon: typeof Package; label: string; value: string; foot: string }) { return <div className="admin-stat"><span className="stat-icon"><Icon size={17}/></span><span className="stat-label">{label}</span><b>{value}</b><small>{foot}</small></div> }
 function Quick({ icon: Icon, title, desc, onClick }: { icon: typeof Store; title: string; desc: string; onClick: () => void }) { return <button type="button" onClick={onClick}><span><Icon size={18}/></span><span><b>{title}</b><small>{desc}</small></span><ChevronRight size={16}/></button> }
 
-function PhotoField({ label, image, onUpload, uploading, aspect = 'wide' }: { label: string; image: string; onUpload: (file: File | undefined) => void; uploading: boolean; aspect?: 'wide' | 'square' }) { return <div className={`photo-field ${aspect}`}><div className="photo-field-preview">{image ? <img src={image} alt={`${label} preview`}/> : <div className="photo-field-empty"><ImagePlus size={26}/><b>No photo selected</b><small>Choose the real project photo you want to show</small></div>}<span>{label}</span></div><label className="upload-control"><input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={e => { onUpload(e.target.files?.[0]); e.currentTarget.value = '' }}/><Upload size={15}/>{uploading ? 'Optimizing photo…' : image ? 'Replace photo' : 'Choose project photo'}<small>JPEG, PNG, WebP or AVIF · up to 8 MB</small></label></div> }
+function PhotoField({ label, image, onUpload, uploading, aspect = 'wide' }: { label: string; image: string; onUpload: (file: File | undefined) => void; uploading: boolean; aspect?: 'wide' | 'square' }) { const previews = useContext(PhotoPreviewContext); return <div className={`photo-field ${aspect}`}><div className="photo-field-preview">{image ? <img src={previews[image] ?? image} alt={`${label} preview`}/> : <div className="photo-field-empty"><ImagePlus size={26}/><b>No photo selected</b><small>Choose the real project photo you want to show</small></div>}<span>{label}</span></div><label className="upload-control"><input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={uploading} onChange={e => { onUpload(e.target.files?.[0]); e.currentTarget.value = '' }}/><Upload size={15}/>{uploading ? 'Optimizing photo…' : image ? 'Replace photo' : 'Choose project photo'}<small>JPEG, PNG, WebP or AVIF · up to 8 MB</small></label></div> }
 
 function BrandEditor({ content, update, upload, uploading }: { content: SiteContent; update: <K extends keyof SiteContent>(key: K, value: SiteContent[K]) => void; upload: (file: File | undefined, apply: (url: string) => void, key: string) => void; uploading: string | null }) {
   return <><SectionIntro eyebrow="WEBSITE CONTENT" title="Your homepage, your voice." text="Refresh the first impression customers get when they visit your solar website."/><div className="editor-columns"><section className="admin-panel editor-panel"><div className="panel-heading"><div><span>HOMEPAGE HERO</span><h2>Headline and introduction</h2></div></div><div className="admin-fields"><label>Hindi introduction<input value={content.heroEyebrow} maxLength={140} onChange={e => update('heroEyebrow', e.target.value)}/></label><div className="field-two"><label>Headline — first line<input value={content.heroHeading} maxLength={100} onChange={e => update('heroHeading', e.target.value)}/></label><label>Headline — highlighted line<input value={content.heroHighlight} maxLength={100} onChange={e => update('heroHighlight', e.target.value)}/></label></div><label>Short introduction<textarea rows={3} value={content.heroDescription} maxLength={500} onChange={e => update('heroDescription', e.target.value)}/><small>{content.heroDescription.length}/500 characters</small></label></div></section>
     <section className="admin-panel editor-panel"><div className="panel-heading"><div><span>HERO PHOTOGRAPH</span><h2>The image customers see first</h2></div></div><PhotoField label="Homepage hero" image={content.heroPhoto} uploading={uploading === 'hero'} onUpload={file => upload(file, url => update('heroPhoto', url), 'hero')}/><p className="editor-help">A wide landscape photo works best. We resize uploads and save them as optimized WebP.</p></section></div>
-    <section className="admin-panel editor-panel shop-photo-editor"><div className="panel-heading"><div><span>YOUR STORE</span><h2>Shopfront photo</h2><p>Show customers the actual Awadh Enterprises showroom.</p></div></div><div className="shop-photo-layout"><PhotoField label="Shopfront" image={content.showroomPhoto} uploading={uploading === 'shop'} aspect="square" onUpload={file => upload(file, url => update('showroomPhoto', url), 'shop')}/><div><div className="admin-fields"><label>Store name<input value={content.brand} maxLength={120} onChange={e => update('brand', e.target.value)}/></label></div><p className="editor-help">This photo appears on the public homepage in the local showroom section. Add its caption, description and click-through link under Photos & products.</p></div></div></section>
+    <section className="admin-panel editor-panel shop-photo-editor"><div className="panel-heading"><div><span>YOUR STORE</span><h2>Shopfront photo</h2><p>Show customers the actual Tejas Enterprises showroom.</p></div></div><div className="shop-photo-layout"><PhotoField label="Shopfront" image={content.showroomPhoto} uploading={uploading === 'shop'} aspect="square" onUpload={file => upload(file, url => update('showroomPhoto', url), 'shop')}/><div><div className="admin-fields"><label>Store name<input value={content.brand} maxLength={120} onChange={e => update('brand', e.target.value)}/></label></div><p className="editor-help">This photo appears on the public homepage in the local showroom section. Add its caption, description and click-through link under Photos & products.</p></div></div></section>
   </>
 }
 
@@ -247,5 +262,5 @@ function CalculatorEditor({ content, update }: { content: SiteContent; update: <
 }
 
 function ContactEditor({ content, update }: { content: SiteContent; update: <K extends keyof SiteContent>(key: K, value: SiteContent[K]) => void }) {
-  return <><SectionIntro eyebrow="STORE PROFILE" title="Let customers reach you easily." text="Your phone number and store location are shown across the public website. Keep them current."/><div className="editor-columns"><section className="admin-panel editor-panel"><div className="panel-heading"><div><span>CONTACT DETAILS</span><h2>Business information</h2></div></div><div className="admin-fields"><label>Brand name<input value={content.brand} maxLength={120} onChange={e => update('brand', e.target.value)}/></label><label>Public phone number<input inputMode="tel" value={content.phone} maxLength={50} onChange={e => update('phone', e.target.value)}/><small>This number powers the call buttons. WhatsApp uses a separate contact number.</small></label><label>Store address<textarea rows={3} value={content.address} maxLength={300} onChange={e => update('address', e.target.value)}/></label></div></section><div className="admin-panel profile-preview"><span className="preview-pin"><MapPin size={19}/></span><span>PUBLIC STORE PROFILE</span><h2>{content.brand}</h2><p>{content.address}</p><b>{content.phone}</b><a href="/contact" target="_blank" rel="noreferrer">Open contact page <ArrowRight size={14}/></a></div></div></>
+  return <><SectionIntro eyebrow="STORE PROFILE" title="Let customers reach you easily." text="Your phone number and store location are shown across the public website. Keep them current."/><div className="editor-columns"><section className="admin-panel editor-panel"><div className="panel-heading"><div><span>CONTACT DETAILS</span><h2>Business information</h2></div></div><div className="admin-fields"><label>Brand name<input value={content.brand} maxLength={120} onChange={e => update('brand', e.target.value)}/></label><label>Public phone number<input inputMode="tel" value={content.phone} maxLength={50} onChange={e => update('phone', e.target.value)}/><small>This number powers the call buttons. WhatsApp uses a separate contact number.</small></label><label>Store address<textarea rows={3} value={content.address} maxLength={300} onChange={e => update('address', e.target.value)}/></label></div></section><div className="admin-panel profile-preview"><span className="preview-pin"><MapPin size={19}/></span><span>PUBLIC STORE PROFILE</span><h2>{content.brand}</h2><a className="profile-address-link" href={GOOGLE_BUSINESS_PROFILE_URL} target="_blank" rel="noopener noreferrer">{content.address}</a><b>{content.phone}</b><LocationMapPreview className="profile-map-preview"/><a href="/contact" target="_blank" rel="noreferrer">Open contact page <ArrowRight size={14}/></a></div></div></>
 }

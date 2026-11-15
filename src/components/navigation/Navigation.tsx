@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import { LanguageSwitcher, T } from '@/components/language/LanguageProvider'
 import { GreetingClock } from '@/components/ui/GreetingClock'
+import { GOOGLE_BUSINESS_PROFILE_URL } from '@/lib/location'
 
 const navItems = [
   { href: '#about', label: 'About Us' },
@@ -27,9 +28,9 @@ const navItems = [
 ]
 
 export function Navigation({
-  brand = 'Over The Top Solar',
-  phone = '89530 69011',
-  address = 'Bari Basahi, Mirzapur, UP 231001',
+  brand = 'Tejas Enterprises',
+  phone = '099356 85939',
+  address = '226/71, Banaras Rd, Phaphamau, Uttar Pradesh 211013',
 }: {
   brand?: string
   phone?: string
@@ -40,7 +41,7 @@ export function Navigation({
   const homeSection = (href: string) => pathname === '/' ? href : `/${href}`
 
   const openEnquiry = () => {
-    window.dispatchEvent(new Event('awadh-enquire'))
+    window.dispatchEvent(new Event('tejas-enquire'))
   }
 
   return (
@@ -50,14 +51,14 @@ export function Navigation({
           <div className="topbar-left">
             <GreetingClock variant="topbar" />
             <span className="topbar-location hidden lg:flex">
-              <MapPin size={13} /> {address}
+              <a className="topbar-map-link" href={GOOGLE_BUSINESS_PROFILE_URL} target="_blank" rel="noopener noreferrer"><MapPin size={13} /> {address}</a>
             </span>
           </div>
 
           <div className="topbar-right">
             <span className="topbar-badge">
               <ShieldCheck size={13} />
-              <T hi="सरकारी पंजीकृत सोलर पार्टनर">Govt. Registered Solar Partner</T>
+              <T hi="प्रयागराज में सोलर समाधान">Solar Solutions in Prayagraj</T>
             </span>
             <Link href="/admin/login" className="admin-access-link">
               <LockKeyhole size={12} /> <T hi="एडमिन">Admin</T>
@@ -70,12 +71,13 @@ export function Navigation({
         <div className="nav-inner">
           <Link href="/" className="brand" aria-label={`${brand} home`}>
             <img
-              src="/images/awadh-logo.jpg"
-              alt="Awadh Enterprises Logo"
+              src="/images/tejas/logo.jpeg"
+              alt="Tejas Enterprises Logo"
               className="brand-logo-img"
-              width={220}
-              height={56}
+              width={52}
+              height={52}
             />
+            <span className="brand-wordmark"><strong>TEJAS</strong><small>ENTERPRISES</small></span>
           </Link>
 
           <nav className="desktop-nav" aria-label="Main navigation">

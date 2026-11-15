@@ -8,7 +8,7 @@ const projects = [
   {
     id: 1,
     title: 'Sharma Residence',
-    location: 'Mirzapur, UP',
+    location: 'Prayagraj, UP',
     type: 'Residential',
     capacity: '5 kW',
     annualSavings: '₹65,000',
@@ -38,7 +38,7 @@ const projects = [
   {
     id: 4,
     title: 'Surya Mall',
-    location: 'Mirzapur, UP',
+    location: 'Prayagraj, UP',
     type: 'Commercial',
     capacity: '120 kW',
     annualSavings: '₹14,80,000',

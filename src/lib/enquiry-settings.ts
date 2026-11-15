@@ -24,7 +24,7 @@ export const defaultEnquirySettings: EnquirySettings = {
 const file = path.join(process.cwd(), 'data', 'enquiry-settings.json')
 export async function getEnquirySettings(): Promise<EnquirySettings> {
   if (usesCloudflareD1()) {
-    const rows = await queryD1<{ content: string }>('SELECT content FROM site_content WHERE site_key = ? LIMIT 1', ['awadh-enquiries'])
+    const rows = await queryD1<{ content: string }>('SELECT content FROM site_content WHERE site_key = ? LIMIT 1', ['tejas-enquiries'])
     return normalizeSettings(rows[0] ? JSON.parse(rows[0].content) as Partial<EnquirySettings> : null)
   }
   try { return normalizeSettings(JSON.parse(await readFile(file, 'utf8'))) }
@@ -35,7 +35,7 @@ function normalizeSettings(value: Partial<EnquirySettings> | null | undefined): 
 }
 export async function saveEnquirySettings(settings: EnquirySettings) {
   if (usesCloudflareD1()) {
-    await queryD1('INSERT INTO site_content (site_key, content, updated_at) VALUES (?, ?, ?) ON CONFLICT(site_key) DO UPDATE SET content = excluded.content, updated_at = excluded.updated_at', ['awadh-enquiries', JSON.stringify(settings), new Date().toISOString()])
+    await queryD1('INSERT INTO site_content (site_key, content, updated_at) VALUES (?, ?, ?) ON CONFLICT(site_key) DO UPDATE SET content = excluded.content, updated_at = excluded.updated_at', ['tejas-enquiries', JSON.stringify(settings), new Date().toISOString()])
     return
   }
   await mkdir(path.dirname(file), { recursive: true })

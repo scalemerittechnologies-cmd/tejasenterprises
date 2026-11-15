@@ -2,31 +2,26 @@
 
 import { Button } from '@/components/ui/Button'
 import Link from 'next/link'
-import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react'
+import { MapPin, Phone, Clock, Send } from 'lucide-react'
+import { GOOGLE_BUSINESS_PROFILE_URL } from '@/lib/location'
 
 const contactInfo = [
   {
     icon: MapPin,
     title: 'Visit Us',
-    details: ['Over The Top Solar', 'Near District Hospital', 'Mirzapur, Uttar Pradesh 231001'],
-    link: { href: 'https://maps.google.com', label: 'Open in Maps' },
+    details: ['Tejas Enterprises', '226/71, Banaras Rd', 'Phaphamau, Uttar Pradesh 211013'],
+    link: { href: GOOGLE_BUSINESS_PROFILE_URL, label: 'Open in Maps' },
   },
   {
     icon: Phone,
     title: 'Call Us',
-    details: ['+91 98765 43210', '+91 87654 32109'],
-    link: { href: 'tel:+919876543210', label: 'Call Now' },
-  },
-  {
-    icon: Mail,
-    title: 'Email Us',
-    details: ['info@overthetopsolar.com', 'sales@overthetopsolar.com'],
-    link: { href: 'mailto:info@overthetopsolar.com', label: 'Send Email' },
+    details: ['+91 99356 85939'],
+    link: { href: 'tel:+919935685939', label: 'Call Now' },
   },
   {
     icon: Clock,
     title: 'Business Hours',
-    details: ['Mon - Sat: 9:00 AM - 7:00 PM', 'Sunday: 10:00 AM - 4:00 PM', 'Emergency: 24/7 Support'],
+    details: ['Please call before visiting'],
     link: null,
   },
 ]
@@ -98,7 +93,7 @@ export function ContactSection() {
                 </Button>
               </Link>
               <p className="mt-6 text-sm text-navy-500">
-                Or call us directly: <a href="tel:+919876543210" className="text-electric-400 hover:text-electric-300 underline">+91 98765 43210</a>
+                Or call us directly: <a href="tel:+919935685939" className="text-electric-400 hover:text-electric-300 underline">+91 99356 85939</a>
               </p>
             </div>
           </div>

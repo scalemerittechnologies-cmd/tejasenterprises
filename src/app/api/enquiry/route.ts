@@ -52,7 +52,7 @@ export async function POST(request: Request) {
     const phone = String(body.phone || '').trim().replace(/\D/g, '')
     const requirement = String(body.requirement || 'Residential Solar').trim()
     const billRange = String(body.billRange || 'Not Specified').trim()
-    const locality = String(body.locality || 'Mirzapur').trim()
+    const locality = String(body.locality || 'Prayagraj').trim()
     const consent = body.consent === true
 
     // Validation
@@ -137,7 +137,7 @@ export async function POST(request: Request) {
 
     // Format WhatsApp follow-up link for instant 1-click booking
     const whatsappUrl = getWhatsAppUrl(
-      `Hello Awadh Solar Team! I submitted an enquiry on your website.\n` +
+      `Hello Tejas Enterprises Team! I submitted an enquiry on your website.\n` +
       `Lead ID: ${leadId}\n` +
       `Name: ${name}\n` +
       `Phone: ${phone}\n` +

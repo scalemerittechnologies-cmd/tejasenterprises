@@ -1,9 +1,9 @@
-# Architecture & Implementation Plan: Over The Top Solar (Awadh Enterprises)
+# Architecture & Implementation Plan: Tejas Enterprises
 
 ## 1. Overview & Brand Identity
-- **Legal/Local Entity**: Awadh Enterprises
-- **Brand Line**: Over The Top Solar — Clean Energy, Sustainable Future
-- **Locality**: Bari Basahi, Mirzapur, Uttar Pradesh 231001, India (Phone: 89530 69011)
+- **Legal/Local Entity**: Tejas Enterprises
+- **Brand Line**: Tejas Enterprises — Clean Energy, Sustainable Future
+- **Locality**: 226/71, Banaras Rd, Phaphamau, Uttar Pradesh 211013, India (Phone: 099356 85939)
 - **Primary Goal**: Award-level, light-theme animated 3D motion website and business platform with zero layout shifts and low-power mobile fallbacks.
 
 ## 2. Technical Stack

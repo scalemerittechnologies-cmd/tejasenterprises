@@ -5,7 +5,7 @@ import { ArrowRight } from 'lucide-react'
 import { T, useLanguage } from '@/components/language/LanguageProvider'
 import { getWhatsAppUrl } from '@/lib/whatsapp'
 
-export function ContactForm({ brand = 'Awadh Enterprises' }: { brand?: string }) {
+export function ContactForm({ brand = 'Tejas Enterprises' }: { brand?: string }) {
   const [message, setMessage] = useState('')
   const { language } = useLanguage()
   function submit(e: FormEvent<HTMLFormElement>) {

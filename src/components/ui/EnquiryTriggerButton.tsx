@@ -14,7 +14,7 @@ export function EnquiryTriggerButton({
       type="button"
       className={className}
       onClick={() => {
-        window.dispatchEvent(new Event('awadh-enquire'))
+        window.dispatchEvent(new Event('tejas-enquire'))
       }}
     >
       {children}

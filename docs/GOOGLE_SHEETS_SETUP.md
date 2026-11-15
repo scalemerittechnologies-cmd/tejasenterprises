@@ -1,12 +1,12 @@
-# 📊 Google Sheets Integration Guide for Over The Top Solar (Awadh Enterprises)
+# 📊 Google Sheets Integration Guide for Tejas Enterprises
 
-Follow these simple 3 steps to connect your website enquiry popup directly to your Google Sheet using your Awadh Google ID.
+Follow these simple 3 steps to connect your website enquiry popup directly to your Google Sheet using your Tejas Google ID.
 
 ---
 
 ### Step 1: Create a Google Sheet
-1. Open [Google Sheets](https://sheets.new) using your Awadh Google account. If you want a Google Form too, create it at [Google Forms](https://forms.new), open its **Responses** tab, and link it to a new or existing spreadsheet.
-2. Name the spreadsheet: **Awadh Solar - Customer Enquiries**.
+1. Open [Google Sheets](https://sheets.new) using your Tejas Google account. If you want a Google Form too, create it at [Google Forms](https://forms.new), open its **Responses** tab, and link it to a new or existing spreadsheet.
+2. Name the spreadsheet: **Tejas Enterprises - Customer Enquiries**.
 3. Popup enquiries are saved in a separate **Enquiries** tab in that spreadsheet. The script creates the tab and its header row automatically.
 
 | A | B | C | D | E | F | G | H | I |
@@ -64,7 +64,7 @@ function doPost(e) {
 1. Click the blue **Deploy** (डिप्लॉय) button on the top right → **New deployment** (नया डिप्लॉयमेंट).
 2. Click the gear icon ⚙️ next to "Select type" and select **Web app**.
 3. Set the following options:
-   - **Description**: `Awadh Solar Enquiry Webhook`
+   - **Description**: `Tejas Enterprises Enquiry Webhook`
    - **Execute as**: `Me (your-email@gmail.com)`
    - **Who has access**: `Anyone` (महत्वपूर्ण: इसे Anyone रखें ताकि वेबसाइट बिना लॉगिन डेटा भेज सके)
 4. Click **Deploy**. (Grant permissions if prompted by Google).

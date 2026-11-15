@@ -1,30 +1,17 @@
-# CLAUDE.md - Over The Top Solar (Awadh Enterprises)
+# Tejas Enterprises website
 
-## Project Overview
-- **Brand**: Over The Top Solar (Awadh Enterprises - Solar Solutions)
-- **Location**: Bari Basahi, Mirzapur, Uttar Pradesh 231001, India
-- **Phone**: +91 89530 69011
-- **Stack**: Next.js 16 (App Router) + TypeScript + Tailwind CSS + shadcn/ui + Supabase (Postgres, Auth, Storage) + Three.js / React Three Fiber + GSAP / Lenis / Framer Motion
+- Brand: Tejas Enterprises
+- Public address: 226/71, Banaras Rd, Phaphamau, Uttar Pradesh 211013
+- Public phone: +91 99356 85939 (from the supplied Google Maps listing)
+- Stack: Next.js 16 App Router, React 19, TypeScript, Tailwind CSS, Cloudflare D1, GSAP, Lenis and Framer Motion
+
+Read `AGENTS.md` and the relevant `node_modules/next/dist/docs/` guide before editing Next.js code.
 
 ## Commands
-- `npm run dev`: Start development server on port 3001
-- `npm run build`: Build production application
-- `npm run start`: Start production server on port 3001
-- `npm run typecheck`: TypeScript type check (`tsc --noEmit`)
-- `npm run lint`: ESLint check (`eslint src`)
 
-## Architecture & Code Rules
-1. **Never Break Working Functionality**:
-   - Bilingual support (`EN`/`हिन्दी`) via `<T>` LanguageProvider
-   - Existing admin management (`/admin`) and secure session cookies
-   - Enquiry popup with WhatsApp and future Google Sheets endpoint
-   - Dynamic 3D canvas with low-power / reduced-motion fallback
-2. **Design Standards**:
-   - Palette: Warm ivory/white base, deep navy (`#0A1628` / `#062149`), solar gold/amber (`#FFB800` / `#F5A900`), electric blue accent
-   - No generic templates; purposeful motion; WCAG AA contrast compliance
-   - Never invent credentials, fake reviews, or unauthorized government approvals
-3. **Database & API Standards**:
-   - Server Components by default; Client Components only for interactivity (`'use client'`)
-   - Strict Row Level Security (RLS) on all Supabase tables
-   - No sensitive keys or service-role tokens on client-facing code
+- `npm run dev`: development server on port 3001
+- `npm run typecheck`: TypeScript check
+- `npm run lint`: ESLint check
+- `npm run build`: production build
 
+Keep bilingual content, admin editing, enquiries and the video section working. Do not invent credentials, reviews, installation counts or government approvals. Tejas brand photos are in `public/images/tejas/`. The previous video is archived at `archive/previous-shop.mp4`; publish a replacement only after it belongs to Tejas Enterprises.

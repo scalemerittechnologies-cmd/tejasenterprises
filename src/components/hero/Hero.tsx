@@ -83,7 +83,7 @@ export function Hero({ content }: { content: SiteContent }) {
           {/* Clean Balanced Heading with Zero Overlap */}
           <h1 id="hero-heading" className="hero-shimmer-title">
             <span className="title-lead">
-              <T hi="मिर्ज़ापुर में सोलर समाधान, उत्पाद और सर्विस">Solar Solutions, Products & Service in Mirzapur</T>
+              <T hi="प्रयागराज में सोलर समाधान, उत्पाद और सर्विस">Solar Solutions, Products & Service in Prayagraj</T>
             </span>
             <RotatingHeroTagline />
           </h1>
@@ -125,7 +125,7 @@ export function Hero({ content }: { content: SiteContent }) {
             <a
               className="hero-whatsapp"
               href={getWhatsAppUrl(
-                'Hello! I would like to inquire about solar rooftop installation and PM Surya Ghar subsidy in Mirzapur/UP.'
+                'Hello! I would like to inquire about solar rooftop installation and PM Surya Ghar subsidy in Prayagraj/UP.'
               )}
               target="_blank"
               rel="noreferrer"
@@ -141,7 +141,7 @@ export function Hero({ content }: { content: SiteContent }) {
           <div className="hero-note-icon">☀</div>
           <div>
             <b><T hi="25 वर्ष की गारंटी">25-Year Performance Guarantee</T></b>
-            <small><T hi="मिर्ज़ापुर और पूर्वांचल का नंबर 1 सोलर पार्टनर">Eastern UP&apos;s Trusted Solar Provider</T></small>
+            <small><T hi="प्रयागराज और पूर्वांचल का नंबर 1 सोलर पार्टनर">Eastern UP&apos;s Trusted Solar Provider</T></small>
           </div>
         </aside>
 

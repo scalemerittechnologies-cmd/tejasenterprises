@@ -1,6 +1,6 @@
-AWADH ENTERPRISES — GOOGLE SHEETS ENQUIRIES / पूछताछ प्रबंधन
+TEJAS ENTERPRISES — GOOGLE SHEETS ENQUIRIES / पूछताछ प्रबंधन
 
-1. Sign in to the Awadh Google account and create a Google Sheet at https://sheets.new.
+1. Sign in to the Tejas Google account and create a Google Sheet at https://sheets.new.
    Optional: create a Google Form at https://forms.new and link it to this Sheet from its Responses tab.
 2. In the linked Sheet, open Extensions > Apps Script and paste the script below.
 3. In Project Settings > Script Properties add ENQUIRY_TOKEN with a random secret of at least 24 characters.

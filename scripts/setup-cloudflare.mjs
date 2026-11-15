@@ -45,8 +45,8 @@ async function localJson(filename) {
 }
 
 for (const [siteKey, filename] of [
-  ['awadh', 'site-content.json'],
-  ['awadh-enquiries', 'enquiry-settings.json'],
+  ['tejas', 'site-content.json'],
+  ['tejas-enquiries', 'enquiry-settings.json'],
 ]) {
   const existing = await query('SELECT site_key FROM site_content WHERE site_key = ? LIMIT 1', [siteKey])
   if (existing.length) {

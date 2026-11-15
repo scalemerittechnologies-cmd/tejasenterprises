@@ -41,6 +41,7 @@ import { EnquiryTriggerButton } from '@/components/ui/EnquiryTriggerButton'
 import { isAdminAuthenticated } from '@/lib/admin-auth'
 import { AdminTabSessionGuard } from '@/components/admin/AdminTabSessionGuard'
 import { defaultEnquirySettings, getEnquirySettings } from '@/lib/enquiry-settings'
+import { GOOGLE_BUSINESS_PROFILE_URL } from '@/lib/location'
 
 export const dynamic = 'force-dynamic'
 type SolarService = {
@@ -66,31 +67,31 @@ const services: SolarService[] = [
 ]
 function serviceWhatsAppMessage({ title, range, action }: SolarService) {
   if (action === 'Apply Now') {
-    return 'Hello Awadh Enterprises, I need help with PM Surya Ghar rooftop solar subsidy eligibility and the application process. Please guide me.'
+    return 'Hello Tejas Enterprises, I need help with PM Surya Ghar rooftop solar subsidy eligibility and the application process. Please guide me.'
   }
   if (action === 'Book Service') {
-    return 'Hello Awadh Enterprises, I would like to book AMC or maintenance for my solar system. Please contact me about a service visit.'
+    return 'Hello Tejas Enterprises, I would like to book AMC or maintenance for my solar system. Please contact me about a service visit.'
   }
   const capacity = range === 'All capacities' ? '' : ` (${range})`
-  return `Hello Awadh Enterprises, I am interested in ${title}${capacity}. Please share a quote and help me plan a site survey.`
+  return `Hello Tejas Enterprises, I am interested in ${title}${capacity}. Please share a quote and help me plan a site survey.`
 }
 
 const reasons = [
-  { icon: MapPin, number: '01', title: "Mirzapur's Solar Team", titleHi: 'मिर्ज़ापुर का अपना सोलर साथी', description: '2,000+ installations across Mirzapur and Eastern Uttar Pradesh.', descriptionHi: 'मिर्ज़ापुर और पूर्वी उत्तर प्रदेश में 2,000+ इंस्टॉलेशन।' },
-  { icon: BadgeCheck, number: '02', title: 'UPNEDA Listed Vendor', titleHi: 'UPNEDA सूचीबद्ध वेंडर', description: 'Awadh Enterprises is listed for Mirzapur on the UPNEDA approved-firms directory.', descriptionHi: 'अवध एंटरप्राइजेज़ UPNEDA की approved-firms सूची में मिर्ज़ापुर के लिए दर्ज है।', link: 'https://upnedasolarrooftopportal.com/Approved-Firms' },
-  { icon: PanelsTopLeft, number: '03', title: 'Authorized Brand Distribution', titleHi: 'अधिकृत ब्रांड डिस्ट्रीब्यूशन', description: 'WAAREE, UTL and Havells product range, with availability confirmed for your project.', descriptionHi: 'WAAREE, UTL और Havells की उत्पाद रेंज; आपके प्रोजेक्ट के लिए उपलब्धता की पुष्टि के साथ।' },
+  { icon: MapPin, number: '01', title: "Prayagraj's Solar Team", titleHi: 'प्रयागराज का अपना सोलर साथी', description: 'Visit our Phaphamau showroom to discuss the right solar system for your property.', descriptionHi: 'अपने घर या व्यवसाय के लिए सही सोलर सिस्टम पर चर्चा करने हमारे फाफामऊ शोरूम आएं।' },
+  { icon: BadgeCheck, number: '02', title: 'Local Solar Guidance', titleHi: 'स्थानीय सोलर मार्गदर्शन', description: 'Discuss rooftop solar products, site surveys and PM Surya Ghar application steps with our team.', descriptionHi: 'हमारी टीम से रूफटॉप सोलर, साइट सर्वे और पीएम सूर्य घर आवेदन की प्रक्रिया समझें।' },
+  { icon: PanelsTopLeft, number: '03', title: 'Solar Product Options', titleHi: 'सोलर उत्पादों के विकल्प', description: 'Compare panels, inverters and batteries based on your site and availability.', descriptionHi: 'अपनी जगह और उपलब्धता के अनुसार पैनल, इन्वर्टर और बैटरी के विकल्प देखें।' },
   { icon: ShieldCheck, number: '04', title: '25-Year Panel Warranty', titleHi: '25 वर्ष की पैनल वारंटी', description: 'Long-term panel output warranty, as per the manufacturer’s terms.', descriptionHi: 'निर्माता की शर्तों के अनुसार लंबे समय की पैनल आउटपुट वारंटी।' },
   { icon: IndianRupee, number: '05', title: 'Direct Manufacturer Pricing', titleHi: 'निर्माता से सीधी कीमत', description: 'Transparent, project-based pricing on your selected system and equipment.', descriptionHi: 'आपके चुने हुए सिस्टम और उपकरण पर स्पष्ट, प्रोजेक्ट-आधारित कीमत।' },
-  { icon: Headset, number: '06', title: '24/7 Support', titleHi: '24/7 सहायता', description: 'Reach our support team for urgent help, service and maintenance coordination.', descriptionHi: 'तत्काल सहायता, सर्विस और मेंटेनेंस समन्वय के लिए हमारी टीम से संपर्क करें।' },
+  { icon: Headset, number: '06', title: 'Service & Support', titleHi: 'सर्विस और सहायता', description: 'Call our team to discuss service visits and maintenance needs.', descriptionHi: 'सर्विस विज़िट और रखरखाव के लिए हमारी टीम को कॉल करें।' },
 ]
 
 export async function generateMetadata(): Promise<Metadata> {
   const content = await getSiteContent()
   return {
-    title: `${content.brand} | Premium Solar Energy Solutions in Mirzapur & UP`,
+    title: `${content.brand} | Premium Solar Energy Solutions in Prayagraj & UP`,
     description: content.heroDescription,
     openGraph: {
-      title: `${content.brand} | Solar Solutions in Mirzapur & UP`,
+      title: `${content.brand} | Solar Solutions in Prayagraj & UP`,
       description: content.heroDescription,
       siteName: content.brand,
     },
@@ -101,7 +102,7 @@ export default async function HomePage() {
   const content = await getSiteContent()
   const enquirySettings = await getEnquirySettings().catch(() => defaultEnquirySettings)
   const canEditProjects = await isAdminAuthenticated()
-  const localVideoExists = await access(path.join(process.cwd(), 'public/videos/shop.mp4'))
+  const localVideoExists = await access(path.join(process.cwd(), 'public/videos/tejas-shop.mp4'))
     .then(() => true)
     .catch(() => false)
 
@@ -123,10 +124,10 @@ export default async function HomePage() {
               telephone: content.phone,
               address: {
                 '@type': 'PostalAddress',
-                streetAddress: 'Bari Basahi',
-                addressLocality: 'Mirzapur',
+                streetAddress: '226/71, Banaras Rd, Phaphamau',
+                addressLocality: 'Prayagraj',
                 addressRegion: 'Uttar Pradesh',
-                postalCode: '231001',
+                postalCode: '211013',
                 addressCountry: 'IN',
               },
             }).replace(/</g, '\\u003c'),
@@ -183,45 +184,40 @@ export default async function HomePage() {
           </div>
         </section>
 
-        <section className="why-awadh-section" aria-labelledby="why-awadh-heading">
+        <section className="why-tejas-section" aria-labelledby="why-tejas-heading">
           <div className="section-heading">
-            <span className="eyebrow"><T hi="अवध सोलर ही क्यों?">WHY AWADH SOLAR?</T></span>
-            <h2 id="why-awadh-heading"><T hi="सोलर के लिए अवध को चुनें">Why Choose Awadh Solar?</T></h2>
+            <span className="eyebrow"><T hi="तेजस एंटरप्राइजेज़ ही क्यों?">WHY TEJAS ENTERPRISES?</T></span>
+            <h2 id="why-tejas-heading"><T hi="सोलर के लिए तेजस को चुनें">Why Choose Tejas Enterprises?</T></h2>
             <p><T hi="स्थानीय अनुभव, सही उत्पाद और इंस्टॉलेशन के बाद भी साथ देने वाली टीम।">Local experience, well-matched products and a team that stays available after installation.</T></p>
           </div>
-          <div className="why-awadh-grid">
-            {reasons.map(({ icon: Icon, number, title, titleHi, description, descriptionHi, link }) => (
-              <article className="why-awadh-card" key={number}>
-                <div className="why-awadh-card-top">
+          <div className="why-tejas-grid">
+            {reasons.map(({ icon: Icon, number, title, titleHi, description, descriptionHi }) => (
+              <article className="why-tejas-card" key={number}>
+                <div className="why-tejas-card-top">
                   <span>{number}</span>
                   <Icon size={25} strokeWidth={1.9} aria-hidden="true" />
                 </div>
                 <h3><T hi={titleHi}>{title}</T></h3>
                 <p><T hi={descriptionHi}>{description}</T></p>
-                {link && (
-                  <a href={link} target="_blank" rel="noreferrer" className="why-awadh-proof-link">
-                    <T hi="UPNEDA सूची देखें">View UPNEDA listing</T><ArrowRight size={14} aria-hidden="true" />
-                  </a>
-                )}
               </article>
             ))}
           </div>
         </section>
 
-        {/* In-person consultation at the Mirzapur office */}
+        {/* In-person consultation at the Prayagraj office */}
         <section className="local-team-section" id="about" aria-labelledby="team-heading">
           <div className="local-team-grid">
             <figure className="local-team-photo-wrap">
               <SitePhoto
-                src="/images/awadh-consultation-professional.webp"
-                alt="Awadh Enterprises team discussing a solar project with customers in Mirzapur"
+                src="/images/tejas/office-wide-new.jpg"
+                alt="Inside the Tejas Enterprises solar showroom in Phaphamau"
                 sizes="(max-width: 768px) 90vw, 42vw"
                 className="consultation-photo"
               />
               <figcaption>
                 <MapPin size={15} />
-                <T hi="सोलर परामर्श • अवध एंटरप्राइजेज़, मिर्ज़ापुर">
-                  In-person solar consultation • Awadh Enterprises, Mirzapur
+                <T hi="तेजस एंटरप्राइजेज़ का शोरूम • फाफामऊ, प्रयागराज">
+                  Tejas Enterprises showroom • Phaphamau, Prayagraj
                 </T>
               </figcaption>
             </figure>
@@ -229,18 +225,18 @@ export default async function HomePage() {
             <div className="local-team-copy">
               <span className="eyebrow">
                 <Sparkles size={14} className="text-amber-500 inline mr-1" />
-                <T hi="मिर्ज़ापुर का अपना सोलर ब्रांड • स्थानीय विशेषज्ञता">
-                  MIRZAPUR&apos;S TRUSTED SOLAR ENERGY PARTNER
+                <T hi="प्रयागराज का अपना सोलर ब्रांड • स्थानीय विशेषज्ञता">
+                  PRAYAGRAJ&apos;S TRUSTED SOLAR ENERGY PARTNER
                 </T>
               </span>
               <h2 id="team-heading">
-                <T hi="मिर्ज़ापुर की मिट्टी से जुड़े।">Rooted in Mirzapur.</T>
+                <T hi="प्रयागराज की मिट्टी से जुड़े।">Rooted in Prayagraj.</T>
                 <br />
                 <span><T hi="हर छत को रोशन करने का संकल्प।">Powering Purvanchal with Clean Solar Energy.</T></span>
               </h2>
               <p>
-                <T hi="अवध एंटरप्राइजेज़ (Awadh Enterprises) मिर्ज़ापुर की अपनी पंजीकृत एवं विश्वसनीय सोलर कंपनी है। बाड़ी बसही स्थित हमारे प्रधान कार्यालय से हमारी प्रमाणित इंजीनियर्स की टीम आपकी छत की माप से लेकर सरकारी सब्सिडी (PM Surya Ghar) स्वीकृति, UPPCL नेट-मीटरिंग और 25 वर्षों के मेंटेनेंस तक हर कदम पर आपके साथ खड़ी रहती है।">
-                  We are not an anonymous online middleman. Awadh Enterprises is Mirzapur&apos;s own registered solar solutions partner headquartered at Bari Basahi. Our certified in-house technical team personally manages every roof survey, net-metering liaison with UPPCL, PM Surya Ghar subsidy approvals, and 25-year lifetime service support.
+                <T hi="तेजस एंटरप्राइजेज़ फाफामऊ, प्रयागराज में सोलर समाधान और उत्पादों के लिए आपका स्थानीय संपर्क है। हमारी टीम से अपनी छत, बिजली की ज़रूरत, सोलर उपकरण और पीएम सूर्य घर योजना के आवेदन के बारे में बात करें।">
+                  Tejas Enterprises is your local contact for solar solutions and products in Phaphamau, Prayagraj. Visit our showroom to discuss your roof, electricity needs, equipment options and the PM Surya Ghar application process.
                 </T>
               </p>
 
@@ -248,15 +244,15 @@ export default async function HomePage() {
                 <div className="team-badge-item">
                   <ShieldCheck size={20} className="text-blue-600" />
                   <div>
-                    <strong><T hi="सरकारी पंजीकृत सोलर पार्टनर">Govt. Registered Partner</T></strong>
-                    <small><T hi="UPPCL नेट-मीटरिंग अनुमोदित">UPPCL Net-Metering Approved</T></small>
+                    <strong><T hi="स्थानीय सोलर मार्गदर्शन">Local Solar Guidance</T></strong>
+                    <small><T hi="योजना की प्रक्रिया में मार्गदर्शन">Guidance on scheme applications</T></small>
                   </div>
                 </div>
                 <div className="team-badge-item">
                   <Wrench size={20} className="text-blue-600" />
                   <div>
-                    <strong><T hi="स्थानीय सर्विस हब (बाड़ी बसही)">Local Service Hub</T></strong>
-                    <small><T hi="24 घंटे में ऑन-साइट सहायता">24h Rapid On-Site Support</T></small>
+                    <strong><T hi="फाफामऊ में हमारा शोरूम">Visit Our Showroom</T></strong>
+                    <small><T hi="सोलर उत्पाद और सेवाओं की जानकारी">Discuss products and services</T></small>
                   </div>
                 </div>
               </div>
@@ -271,6 +267,21 @@ export default async function HomePage() {
                 </a>
               </div>
             </div>
+          </div>
+        </section>
+
+        <section className="tejas-gallery" aria-labelledby="tejas-gallery-heading">
+          <div className="section-heading">
+            <span className="eyebrow"><T hi="हमारा शोरूम">OUR SHOWROOM</T></span>
+            <h2 id="tejas-gallery-heading"><T hi="तेजस एंटरप्राइजेज़ की एक झलक">A look inside Tejas Enterprises</T></h2>
+            <p><T hi="फाफामऊ, प्रयागराज स्थित हमारे ऑफिस की वास्तविक तस्वीरें।">Photos from our office in Phaphamau, Prayagraj.</T></p>
+          </div>
+          <div className="tejas-gallery-grid">
+            <figure><img src="/images/tejas/office-wide-new.jpg" alt="Tejas Enterprises office with solar panel displays and customer seating" loading="lazy" /><figcaption><T hi="हमारा ऑफिस">Our office</T></figcaption></figure>
+            <figure><img src="/images/tejas/awards-wall.png" alt="Solar panel mural and certificates at Tejas Enterprises" loading="lazy" /><figcaption><T hi="सोलर डिस्प्ले और प्रमाणपत्र">Solar display and certificates</T></figcaption></figure>
+            <figure><img src="/images/tejas/office-banner.png" alt="Tejas Enterprises solar office banner" loading="lazy" /><figcaption><T hi="तेजस एंटरप्राइजेज़ बैनर">Tejas Enterprises banner</T></figcaption></figure>
+            <figure><img src="/images/tejas/consultation-office.webp" alt="Consultation seating and solar panel displays inside Tejas Enterprises" loading="lazy" /><figcaption><T hi="सोलर परामर्श कार्यालय">Solar consultation office</T></figcaption></figure>
+            <figure><img src="/images/tejas/enterprise-office.webp" alt="Tejas Enterprises office with solar panels, seating and product displays" loading="lazy" /><figcaption><T hi="हमारा सोलर शोरूम">Our solar showroom</T></figcaption></figure>
           </div>
         </section>
 
@@ -411,8 +422,8 @@ export default async function HomePage() {
           <div>
             <MapPin />
             <span>
-              <b><T>Based in Mirzapur</T></b>
-              <small>{content.address}</small>
+              <b><T>Based in Prayagraj</T></b>
+              <small><a href={GOOGLE_BUSINESS_PROFILE_URL} target="_blank" rel="noopener noreferrer">{content.address}</a></small>
             </span>
           </div>
           <EnquiryTriggerButton className="service-strip-cta">
@@ -429,7 +440,7 @@ export default async function HomePage() {
             </h2>
             <p>
               <T hi="सही विकल्प आपकी जगह और बिजली की ज़रूरतों पर निर्भर करता है। हम समझने में आपकी पूरी मदद करेंगे।">
-                The right choice depends on your site and electricity needs. Our Mirzapur team is always ready to guide you.
+                The right choice depends on your site and electricity needs. Our Prayagraj team is always ready to guide you.
               </T>
             </p>
             <EnquiryTriggerButton className="text-link">

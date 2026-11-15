@@ -1,0 +1,123 @@
+{
+  "countdown": {
+    "enabled": false,
+    "endsAt": "",
+    "messageEn": "Site visits & solar consultation",
+    "messageHi": "साइट विज़िट और सोलर परामर्श",
+    "ctaEn": "Enquire",
+    "ctaHi": "पूछताछ करें"
+  },
+  "shopVideo": "/videos/tejas-shop.mp4",
+  "brand": "Tejas Enterprises",
+  "phone": "099356 85939",
+  "address": "226/71, Banaras Rd, Phaphamau, Uttar Pradesh 211013",
+  "heroEyebrow": "Prayagraj's Trusted Solar Energy Partner",
+  "heroHeading": "PRAYAGRAJ'S TRUSTED SOLAR ENERGY PARTNER",
+  "heroHighlight": "POWER YOUR FUTURE. SAVE MORE EVERY DAY.",
+  "heroDescription": "Reliable solar solutions for homes, businesses and industries. From premium solar panels to professional installation, we make clean energy simple and affordable.",
+  "showroomPhoto": "/images/tejas/office-banner.png",
+  "showroomTitle": "Visit our Prayagraj showroom.",
+  "showroomDescription": "Visit Tejas Enterprises at 226/71, Banaras Road, Phaphamau, Prayagraj to discuss solar panels, rooftop systems and your site requirements.",
+  "showroomHref": "/contact",
+  "heroPhoto": "/images/tejas/powering-homes.webp",
+  "projectsHeading": "Solar Projects",
+  "projectsSubheading": "Ask our team about rooftop solar projects and verified installation photos.",
+  "projects": [
+    {
+      "id": "demo-residential",
+      "title": "DEMO — Residential Rooftop Solar",
+      "description": "Sample project details. Replace this text and photo with your completed home installation.",
+      "category": "Residential",
+      "location": "Prayagraj (demo)",
+      "capacity": "5 kW (demo)",
+      "image": "/images/tejas/powering-homes.webp"
+    },
+    {
+      "id": "solar-panel-stock",
+      "title": "Solar Panels Ready for Installation",
+      "description": "Solar panels stacked and ready for upcoming rooftop installations. Talk to our team about panel selection and a system tailored to your property.",
+      "category": "Commercial",
+      "location": "",
+      "capacity": "",
+      "image": "/images/projects/solar-panel-stock.png"
+    },
+    {
+      "id": "farmhouse-rooftop",
+      "title": "Farmhouse Rooftop Solar",
+      "description": "Elevated rooftop solar panels on a rural home, with farmland surrounding the property. Explore a solar setup designed for your roof and energy needs.",
+      "category": "Residential",
+      "location": "",
+      "capacity": "",
+      "image": "/images/projects/farmhouse-rooftop-solar.png"
+    }
+  ],
+  "solutions": [
+    {
+      "id": "homes",
+      "title": "Residential Rooftop Solar",
+      "description": "Complete solar rooftop with Growatt/grid inverters and PM Surya Ghar subsidy assistance.",
+      "image": "/images/tejas/powering-homes.webp",
+      "href": "/solar-solutions/residential"
+    },
+    {
+      "id": "business",
+      "title": "Commercial & Industrial Solar",
+      "description": "High-capacity solar setups for carpet industries, factories, schools, and commercial premises.",
+      "image": "/images/projects/commercial-carpet-bhadohi.jpg",
+      "href": "/solar-solutions/commercial"
+    },
+    {
+      "id": "institutions",
+      "title": "Institutional Solar Systems",
+      "description": "Solar solutions for colleges, hospitals, and government facilities with maximum uptime.",
+      "image": "/images/projects/commercial-carpet-bhadohi.jpg",
+      "href": "/solar-solutions/institutional"
+    },
+    {
+      "id": "products",
+      "title": "Solar Inverters & Batteries",
+      "description": "Tier-1 Mono PERC panels, smart grid-tied inverters, and advanced battery backup systems.",
+      "image": "/images/tejas/powering-homes.webp",
+      "href": "/products"
+    }
+  ],
+  "products": [
+    {
+      "id": "panels",
+      "name": "Monocrystalline Solar Panels",
+      "category": "Panels",
+      "description": "High-efficiency Tier-1 bifacial and mono PERC solar modules with 25-year performance warranty.",
+      "image": "/images/products/golden-solar-panel-array.webp",
+      "detail": "High power density and superior low-light generation.",
+      "quote": "",
+      "href": "/products/solar-panels"
+    },
+    {
+      "id": "inverters",
+      "name": "Growatt & Smart Solar Inverters",
+      "category": "Inverters",
+      "description": "Smart grid-tied, hybrid, and off-grid solar inverters with live mobile app generation monitoring.",
+      "image": "/images/tejas/powering-homes.webp",
+      "detail": "Advanced MPPT tracking and robust surge protection.",
+      "quote": "",
+      "href": "/products/inverters"
+    },
+    {
+      "id": "batteries",
+      "name": "Lithium & Solar Batteries",
+      "category": "Storage",
+      "description": "Heavy-duty tubular and LiFePO4 solar batteries for 24×7 backup during power outages.",
+      "image": "/images/products/solar-battery.svg",
+      "detail": "Long cycle life and fast solar charging compatibility.",
+      "quote": "",
+      "href": "/products/batteries"
+    }
+  ],
+  "calculator": {
+    "rupeesPerUnit": 8,
+    "monthlyUnitsPerKw": 120,
+    "panelWatts": 540,
+    "costPerKwMin": 50000,
+    "costPerKwMax": 78000
+  }
+}

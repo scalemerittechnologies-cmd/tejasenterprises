@@ -19,13 +19,13 @@ const notoDevanagari = Noto_Sans_Devanagari({ subsets: ['devanagari'], display: 
 
 export const metadata: Metadata = {
   title: {
-    default: 'Awadh Enterprises | Solar Solutions in Mirzapur',
-    template: '%s | Awadh Enterprises',
+    default: 'Tejas Enterprises | Solar Solutions in Prayagraj',
+    template: '%s | Tejas Enterprises',
   },
-  description: 'Explore solar solutions for homes, businesses and institutions from Awadh Enterprises in Mirzapur, Uttar Pradesh.',
-  authors: [{ name: 'Awadh Enterprises' }],
-  creator: 'Awadh Enterprises',
-  publisher: 'Awadh Enterprises',
+  description: 'Explore solar solutions for homes, businesses and institutions from Tejas Enterprises in Prayagraj, Uttar Pradesh.',
+  authors: [{ name: 'Tejas Enterprises' }],
+  creator: 'Tejas Enterprises',
+  publisher: 'Tejas Enterprises',
   robots: {
     index: true,
     follow: true,
@@ -40,17 +40,16 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_IN',
-    siteName: 'Awadh Enterprises',
-    title: 'Awadh Enterprises | Solar Solutions in Mirzapur',
-    description: 'Solar solutions for homes, businesses and institutions in Mirzapur.',
+    siteName: 'Tejas Enterprises',
+    title: 'Tejas Enterprises | Solar Solutions in Prayagraj',
+    description: 'Solar solutions for homes, businesses and institutions in Prayagraj.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Awadh Enterprises | Solar Solutions in Mirzapur',
-    description: 'Solar solutions for homes, businesses and institutions in Mirzapur.',
+    title: 'Tejas Enterprises | Solar Solutions in Prayagraj',
+    description: 'Solar solutions for homes, businesses and institutions in Prayagraj.',
   },
-  icons: {
-  },
+  icons: { icon: '/images/tejas/logo.jpeg', apple: '/images/tejas/logo.jpeg' },
 }
 
 export const viewport: Viewport = {

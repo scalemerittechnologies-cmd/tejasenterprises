@@ -4,7 +4,7 @@ import { AdminDashboard } from '@/components/admin/AdminDashboard'
 import { isAdminAuthenticated } from '@/lib/admin-auth'
 import { getSiteContent } from '@/lib/site-content'
 
-export const metadata: Metadata = { title: 'Website dashboard | Awadh Enterprises', robots: { index: false, follow: false } }
+export const metadata: Metadata = { title: 'Website dashboard | Tejas Enterprises', robots: { index: false, follow: false } }
 export const dynamic = 'force-dynamic'
 
 export default async function AdminPage() {

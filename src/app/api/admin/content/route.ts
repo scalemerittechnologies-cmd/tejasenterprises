@@ -3,6 +3,7 @@ import { revalidatePath, revalidateTag } from 'next/cache'
 import { isAdminAuthenticated } from '@/lib/admin-auth'
 import { defaultSiteContent, saveSiteContent, type Product, type Project, type ProjectCategory, type SiteContent, type Solution } from '@/lib/site-content'
 import { hasAllowedOrigin } from '@/lib/request-origin'
+import { validatePendingUploads } from '@/lib/github-content'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -15,8 +16,7 @@ function text(value: unknown, max: number, fallback = ''): string | null {
 function photo(value: unknown): string | null {
   if (typeof value !== 'string' || value.length > 1500) return null
   if (/^\/api\/media\/[a-f0-9-]{20,50}\.webp$/.test(value)) return value
-  if (/^\/images\/[a-z0-9/_-]+\.(webp|svg|png|jpg)$/.test(value)) return value
-  if (/^\/storefront-showcase\.webp$/.test(value)) return value
+  if (/^\/images\/[a-z0-9/_-]+\.(webp|svg|png|jpg|jpeg)$/.test(value)) return value
   if (/^https:\/\/[a-z0-9.-]+(?::\d+)?(?:\/[^\s]*)?$/i.test(value)) return value
   return null
 }
@@ -88,12 +88,13 @@ export async function PUT(request: Request) {
   const countdown = { enabled: timer.enabled, endsAt: timer.endsAt, messageEn: timer.messageEn.trim(), messageHi: timer.messageHi.trim(), ctaEn: timer.ctaEn.trim(), ctaHi: timer.ctaHi.trim() }
   const content: SiteContent = { countdown, shopVideo, brand, phone, address, heroEyebrow, heroHeading, heroHighlight, heroDescription, showroomPhoto, showroomTitle, showroomDescription, showroomHref, heroPhoto, projectsHeading, projectsSubheading, projects, solutions, products, calculator: calculator as SiteContent['calculator'] }
   try {
-    await saveSiteContent(content)
-    revalidateTag('awadh-site-content', { expire: 0 })
+    const uploads = validatePendingUploads(input.pendingUploads, content)
+    const result = await saveSiteContent(content, uploads)
+    revalidateTag('tejas-site-content', { expire: 0 })
     revalidatePath('/', 'page')
     revalidatePath('/[...slug]', 'page')
-    return NextResponse.json({ ok: true, savedAt: new Date().toISOString() })
-  } catch {
-    return NextResponse.json({ error: 'Could not save changes. Check the configured database or persistent server storage.' }, { status: 500 })
+    return NextResponse.json({ ok: true, savedAt: new Date().toISOString(), ...result })
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'Could not save changes.' }, { status: 500 })
   }
 }

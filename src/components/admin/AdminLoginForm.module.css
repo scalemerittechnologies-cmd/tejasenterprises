@@ -25,8 +25,10 @@
   padding: clamp(28px, 3vw, 40px);
 }
 
-.brand { display: inline-flex; align-self: flex-start; align-items: center; border-radius: 8px; }
-.brand img { display: block; width: clamp(170px, 15vw, 200px); height: auto; }
+.brand { display: inline-flex; align-self: flex-start; align-items: center; gap:12px; border-radius: 8px; color:#123766; font-size:24px; font-weight:800; letter-spacing:.06em; }
+.brand img { display: block; width:72px; height:72px; border-radius:50%; }
+.brand span{display:grid;line-height:1.05}
+.brand small{font-size:11px;letter-spacing:.18em;margin-top:5px}
 .brand:focus-visible, .formFooter a:focus-visible, .passwordToggle:focus-visible, .submit:focus-visible { outline: 3px solid #2a83cc; outline-offset: 4px; }
 
 .formContent { width: min(100%, 440px); margin: auto 0; padding: 18px 0; }

@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
-export const ADMIN_TAB_SESSION_KEY = 'awadh-admin-tab-session'
+export const ADMIN_TAB_SESSION_KEY = 'tejas-admin-tab-session'
 
 export function AdminTabSessionGuard() {
   const router = useRouter()

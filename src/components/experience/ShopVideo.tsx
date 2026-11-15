@@ -27,24 +27,23 @@ export function ShopVideo({
   const ref = useRef<HTMLVideoElement>(null)
   const [muted, setMuted] = useState(true)
   const [failed, setFailed] = useState(false)
-  const [ready, setReady] = useState(false)
   const [inView, setInView] = useState(false)
   const { language } = useLanguage()
   const hi = language === 'hi'
 
-  const available = content.shopVideo !== '/videos/shop.mp4' || localVideoExists
+  const available = content.shopVideo !== '/videos/tejas-shop.mp4' || localVideoExists
 
   useEffect(() => {
     const video = ref.current
     if (!video) return
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setReady(true)
-          setInView(true)
-        } else {
-          setInView(false)
+        const visible = entry.intersectionRatio >= 0.3
+        setInView(visible)
+        if (!visible) {
           video.pause()
+          video.muted = true
+          setMuted(true)
         }
       },
       { threshold: 0.3 }
@@ -60,24 +59,38 @@ export function ShopVideo({
     const video = ref.current
     if (!video || !available) return
 
+    const stopPlayback = () => {
+      video.pause()
+      video.muted = true
+      setMuted(true)
+    }
     const syncPlayback = () => {
-      if (document.hidden || !inView || !ready) {
-        video.pause()
+      if (document.hidden || !inView) {
+        stopPlayback()
         return
       }
-      video.muted = muted
       video.play().catch(() => {})
     }
 
     syncPlayback()
     document.addEventListener('visibilitychange', syncPlayback)
-    return () => document.removeEventListener('visibilitychange', syncPlayback)
-  }, [available, inView, muted, ready])
+    window.addEventListener('pagehide', stopPlayback)
+    return () => {
+      document.removeEventListener('visibilitychange', syncPlayback)
+      window.removeEventListener('pagehide', stopPlayback)
+    }
+  }, [available, inView])
 
   const toggleMute = () => {
-    if (!ref.current) return
-    ref.current.muted = !muted
-    setMuted(!muted)
+    const video = ref.current
+    if (!video || !inView || document.hidden) return
+    const nextMuted = !video.muted
+    video.muted = nextMuted
+    setMuted(nextMuted)
+    if (!nextMuted && video.paused) video.play().catch(() => {
+      video.muted = true
+      setMuted(true)
+    })
   }
 
   return (
@@ -89,7 +102,7 @@ export function ShopVideo({
       <div className="shop-copy">
         <span className="eyebrow">
           <Sparkles size={14} className="text-amber-500 inline mr-1" />
-          <T hi="शोरूम व अनुभव केंद्र">OUR MIRZAPUR EXPERIENCE CENTER</T>
+          <T hi="शोरूम व अनुभव केंद्र">OUR PRAYAGRAJ EXPERIENCE CENTER</T>
         </span>
         <h2 id="store-heading">
           <T hi="स्क्रीन से परे।">Beyond the Screen.</T>
@@ -97,8 +110,8 @@ export function ShopVideo({
           <em><T hi="हमारे शोरूम में आएं।">Experience Solar in Person.</T></em>
         </h2>
         <p>
-          <T hi="अपने सोलर सफ़र की शुरुआत सीधी बातचीत से करें। हमारे बाड़ी बसही स्थित शोरूम में आएं, मोनोक्रिस्टलाइन पैनल्स, ग्रिवाट इन्वर्टर्स को स्वयं देखें और तुरंत अपनी छत का सब्सिडी आकलन कराएं।">
-            Visit our Bari Basahi experience hub to see real Tier-1 monocrystalline panels, test smart hybrid inverters, and verify your PM Surya Ghar subsidy in person with our engineering team.
+          <T hi="अपने सोलर सफ़र की शुरुआत सीधी बातचीत से करें। हमारे फाफामऊ स्थित शोरूम में आएं और सोलर पैनल, इन्वर्टर तथा अपनी छत के लिए उपलब्ध विकल्पों पर बात करें।">
+            Visit our Phaphamau showroom to explore solar panels, inverters and rooftop options for your property with our team.
           </T>
         </p>
 
@@ -124,40 +137,42 @@ export function ShopVideo({
           {available && !failed ? (
             <video
               ref={ref}
-              src={ready ? content.shopVideo : undefined}
-              poster="/videos/shop-poster.jpg"
+              src={content.shopVideo}
+              poster="/videos/tejas-shop-poster.jpg"
               muted={muted}
               autoPlay
               loop
               playsInline
-              preload="auto"
-              aria-label={hi ? 'अवध एंटरप्राइजेज़ स्टोर वीडियो' : 'Awadh Enterprises Store Tour'}
+              preload="metadata"
+              aria-label={hi ? 'तेजस एंटरप्राइजेज़ स्टोर वीडियो' : 'Tejas Enterprises Store Tour'}
+              onCanPlay={() => {
+                if (inView && !document.hidden) ref.current?.play().catch(() => {})
+              }}
               onError={() => setFailed(true)}
             />
           ) : (
             <img
-              src="/videos/shop-poster.jpg"
-              alt={hi ? 'अवध एंटरप्राइजेज़ स्टोर' : 'Awadh Enterprises Store Tour'}
+              src="/videos/tejas-shop-poster.jpg"
+              alt={hi ? 'तेजस एंटरप्राइजेज़ का वीडियो पोस्टर' : 'Tejas Enterprises video poster'}
               className="portrait-fallback-img"
             />
           )}
 
           <div className="frame-reflection" aria-hidden="true" />
 
-          {/* Interactive Video Controls */}
           {available && !failed && (
-            <div className="video-controls">
-              <button
-                type="button"
-                onClick={toggleMute}
-                aria-label={muted ? 'Unmute video' : 'Mute video'}
-                aria-pressed={!muted}
-                title={muted ? 'Turn sound on' : 'Mute sound'}
-              >
-                {muted ? <VolumeX size={17} /> : <Volume2 size={17} />}
-              </button>
-            </div>
+            <button
+              type="button"
+              className="video-sound-control"
+              onClick={toggleMute}
+              aria-label={muted ? 'Unmute video' : 'Mute video'}
+              aria-pressed={!muted}
+              title={muted ? 'Turn sound on' : 'Mute sound'}
+            >
+              {muted ? <VolumeX size={20} aria-hidden="true" /> : <Volume2 size={20} aria-hidden="true" />}
+            </button>
           )}
+
         </div>
       </div>
 
@@ -166,9 +181,9 @@ export function ShopVideo({
         <figure className="shop-storefront-photo">
           <img
             src={content.showroomPhoto}
-            alt={hi ? 'मिर्ज़ापुर में अवध एंटरप्राइजेज़ का शोरूम' : 'Awadh Enterprises storefront in Mirzapur'}
-            width={1280}
-            height={854}
+            alt={hi ? 'प्रयागराज में तेजस एंटरप्राइजेज़ का ऑफिस बैनर' : 'Tejas Enterprises office banner in Prayagraj'}
+            width={1448}
+            height={1086}
             loading="lazy"
             decoding="async"
           />
@@ -179,12 +194,12 @@ export function ShopVideo({
           </span>
           <div>
             <span className="location-eyebrow">HEAD OFFICE & SHOWROOM</span>
-            <h3>Mirzapur, Uttar Pradesh</h3>
+            <h3>Prayagraj, Uttar Pradesh</h3>
           </div>
         </div>
 
         <div className="location-address-group">
-          <p className="location-address-text">{content.address}</p>
+          <p className="location-address-text"><a className="location-address-link" href={GOOGLE_BUSINESS_PROFILE_URL} target="_blank" rel="noopener noreferrer">{content.address}</a></p>
           <a className="google-profile-link" href={GOOGLE_BUSINESS_PROFILE_URL} target="_blank" rel="noopener noreferrer">
             <ExternalLink size={15} aria-hidden="true" />
             <T hi="हमारी गूगल लिस्टिंग देखें">View our Google listing</T>
@@ -194,8 +209,8 @@ export function ShopVideo({
         <div className="location-hours">
           <Clock size={16} className="text-amber-500 flex-none" />
           <div>
-            <strong>Monday – Saturday</strong>
-            <small>9:30 AM – 7:00 PM (Sunday by Appointment)</small>
+            <strong>Planning a visit?</strong>
+            <small>Call ahead to confirm showroom hours</small>
           </div>
         </div>
 

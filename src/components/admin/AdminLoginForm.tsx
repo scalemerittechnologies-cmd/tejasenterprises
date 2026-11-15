@@ -50,8 +50,9 @@ export function AdminLoginForm({ configured, redirectTo = '/admin' }: { configur
     <main className={styles.page}>
       <div className={styles.shell}>
         <section className={styles.formPanel} aria-labelledby="admin-login-title">
-          <a className={styles.brand} href="/" aria-label="Awadh Enterprises home">
-            <Image src="/images/awadh-logo.jpg" alt="Awadh Enterprises" width={200} height={67} priority />
+          <a className={styles.brand} href="/" aria-label="Tejas Enterprises home">
+            <Image src="/images/tejas/logo.jpeg" alt="Tejas Enterprises" width={72} height={72} priority />
+            <span>TEJAS <small>ENTERPRISES</small></span>
           </a>
 
           <div className={styles.formContent}>
@@ -124,18 +125,18 @@ export function AdminLoginForm({ configured, redirectTo = '/admin' }: { configur
           </div>
         </section>
 
-        <aside className={styles.showcase} aria-label="Awadh Enterprises showroom">
+        <aside className={styles.showcase} aria-label="Tejas Enterprises showroom">
           <div className={styles.photo}>
             <Image
-              src="/images/awadh-storefront.webp"
-              alt="Awadh Enterprises showroom storefront in Mirzapur"
+              src="/images/tejas/office-banner.png"
+              alt="Tejas Enterprises office banner in Prayagraj"
               fill
               sizes="(max-width: 1050px) 0px, (max-width: 1440px) 50vw, 700px"
               priority
             />
           </div>
           <div className={styles.showcaseCopy}>
-            <span className={styles.location}>AWADH ENTERPRISES · MIRZAPUR</span>
+            <span className={styles.location}>TEJAS ENTERPRISES · PRAYAGRAJ</span>
             <h2>Your store, always up to date.</h2>
             <p>Keep photos, products and customer information current from one private workspace.</p>
           </div>

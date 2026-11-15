@@ -19,7 +19,7 @@ export default async function PhotoCreditsPage() {
       <Link className="text-link" href="/"><ArrowLeft size={16} /><T hi="होम पर वापस जाएं">Back to home</T></Link>
       <span className="eyebrow"><T hi="भारत की तस्वीरें">PHOTOGRAPHED IN INDIA</T></span>
       <h1><T hi="तस्वीरों का श्रेय">Photo credits</T></h1>
-      <p className="credits-intro"><T hi="उत्तर प्रदेश के गाँव और भारत की सोलर तस्वीरें। ये क्षेत्र और सोलर के उदाहरण हैं; इन्हें अवध एंटरप्राइज़ेज़ के किए हुए प्रोजेक्ट के रूप में प्रस्तुत नहीं किया गया है।">Real places in Uttar Pradesh and solar photography from India. These images illustrate the region and solar use; they are not presented as installations completed by Awadh Enterprises.</T></p>
+      <p className="credits-intro"><T hi="उत्तर प्रदेश के गाँव और भारत की सोलर तस्वीरें। ये क्षेत्र और सोलर के उदाहरण हैं; इन्हें तेजस एंटरप्राइजेज़ के किए हुए प्रोजेक्ट के रूप में प्रस्तुत नहीं किया गया है।">Real places in Uttar Pradesh and solar photography from India. These images illustrate the region and solar use; they are not presented as installations completed by Tejas Enterprises.</T></p>
       <div className="photo-credits-grid">
         {sitePhotos.map(photo => <article key={photo.src}>
           <div className="credit-photo"><SitePhoto src={photo.src} sizes="(max-width: 720px) 90vw, 43vw" /></div>

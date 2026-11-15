@@ -3,6 +3,7 @@ import { hasAllowedOrigin } from '@/lib/request-origin'
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { isAdminAuthenticated } from '@/lib/admin-auth'
 import { getSiteContent, saveSiteContent, type Project, type ProjectCategory } from '@/lib/site-content'
+import { validatePendingUploads } from '@/lib/github-content'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -13,8 +14,7 @@ function safeText(value: unknown, max: number) {
 function safePhoto(value: unknown) {
   if (typeof value !== 'string' || value.length > 1500) return false
   return /^\/api\/media\/[a-f0-9-]{20,50}\.webp$/.test(value)
-    || /^\/images\/[a-z0-9/_-]+\.(webp|svg|png|jpg)$/.test(value)
-    || value === '/storefront-showcase.webp'
+    || /^\/images\/[a-z0-9/_-]+\.(webp|svg|png|jpg|jpeg)$/.test(value)
     || /^https:\/\/[a-z0-9.-]+(?::\d+)?(?:\/[^\s]*)?$/i.test(value)
 }
 export async function PUT(request: Request) {
@@ -45,11 +45,12 @@ export async function PUT(request: Request) {
   if (new Set(projects.map(project => project.id)).size !== projects.length) return NextResponse.json({ error: 'Project IDs must be unique.' }, { status: 400 })
   try {
     const current = await getSiteContent()
-    await saveSiteContent({ ...current, projectsHeading: heading, projectsSubheading: subheading, projects })
-    revalidateTag('awadh-site-content', { expire: 0 })
+    const content = { ...current, projectsHeading: heading, projectsSubheading: subheading, projects }
+    const result = await saveSiteContent(content, validatePendingUploads(input.pendingUploads, content))
+    revalidateTag('tejas-site-content', { expire: 0 })
     revalidatePath('/', 'page')
-    return NextResponse.json({ ok: true, projects, heading, subheading })
-  } catch {
-    return NextResponse.json({ error: 'Could not save projects. Check your configured storage.' }, { status: 500 })
+    return NextResponse.json({ ok: true, projects, heading, subheading, ...result })
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'Could not save projects.' }, { status: 500 })
   }
 }

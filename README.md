@@ -1,19 +1,19 @@
-# Awadh_Solar
+# Tejas Enterprises Solar Website
 
-Awadh Solar website built with Next.js.
+Next.js website for Tejas Enterprises in Phaphamau, Prayagraj.
 
 ## Local development
 
-Install dependencies with `npm install`, copy `.env.example` to `.env.local` and configure your own values, then run `npm run dev`.
+Install dependencies with `npm install`, copy `.env.example` to `.env.local` and configure private values, then run `npm run dev`.
 
 ## Checks
 
 Run `npm run typecheck`, `npm run lint`, and `npm run build`.
 
-Private environment values, enquiry records and integration secrets are excluded from version control. See `ADMIN_SETUP.md` for administration setup.
+## Brand and contact
 
-## Free production storage
+The logo and office photos supplied by Tejas Enterprises are in `public/images/tejas/`. The address and public phone number are based on the provided [Google Maps listing](https://maps.app.goo.gl/HsmWbS4ATT2376pb7?g_st=aw). The same number is currently used for WhatsApp links; confirm that it accepts WhatsApp messages before launch.
 
-Use Cloudflare D1 for site content, settings, enquiries and admin-uploaded photos. Complete [the Cloudflare and Netlify setup](docs/CLOUDFLARE_NETLIFY_SETUP.md) before deploying.
+The video section plays the supplied Tejas reel from `public/videos/tejas-shop.mp4` with a matching portrait poster. The previous video is preserved in `archive/previous-shop.mp4` and is not published on the website.
 
-For this GitHub account, follow [the deployment checklist](docs/NEW_GITHUB_NETLIFY_DEPLOY.md). GitHub Actions runs typecheck, lint and build on pushes and pull requests.
+The admin dashboard, enquiry storage and optional Google Sheets integration require deployment configuration. See `ADMIN_SETUP.md` and `docs/CLOUDFLARE_NETLIFY_SETUP.md`.

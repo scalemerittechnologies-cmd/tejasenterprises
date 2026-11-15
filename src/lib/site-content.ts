@@ -2,6 +2,8 @@ import 'server-only'
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { queryD1, usesCloudflareD1 } from '@/lib/cloudflare-storage'
+import { commitGithubContent, githubContentConfigured, stageGithubImage, type PendingUpload } from '@/lib/github-content'
+import trackedContent from '@/content/site-content.json'
 
 export type Product = { id: string; name: string; category: string; description: string; image: string; detail: string; quote: string; href: string }
 export type Solution = { id: string; title: string; description: string; image: string; href: string }
@@ -30,27 +32,27 @@ export type SiteContent = {
   calculator: { rupeesPerUnit: number; monthlyUnitsPerKw: number; panelWatts: number; costPerKwMin: number; costPerKwMax: number }
 }
 
-const image = '/images/projects/residential-rooftop-growatt.jpg'
+const image = '/images/tejas/powering-homes.webp'
 const emptyProjectFallback = (index: number): Project => ({ id: `project-${index + 1}`, title: 'Solar Project', description: '', category: 'Residential', location: '', capacity: '', image })
 export const defaultSiteContent: SiteContent = {
   countdown: { enabled: false, endsAt: '', messageEn: 'Site visits & solar consultation', messageHi: 'साइट विज़िट और सोलर परामर्श', ctaEn: 'Enquire', ctaHi: 'पूछताछ करें' },
-  shopVideo: '/videos/shop.mp4',
-  brand: 'Awadh Enterprises', phone: '89530 69011', address: 'Bari Basahi, Mirzapur, Mirzapur-cum-Vindhyachal, Uttar Pradesh 231001',
-  heroEyebrow: "Mirzapur's Trusted Solar Energy Partner", heroHeading: "MIRZAPUR'S TRUSTED SOLAR ENERGY PARTNER", heroHighlight: 'POWER YOUR FUTURE. SAVE MORE EVERY DAY.',
+  shopVideo: '/videos/tejas-shop.mp4',
+  brand: 'Tejas Enterprises', phone: '099356 85939', address: '226/71, Banaras Rd, Phaphamau, Uttar Pradesh 211013',
+  heroEyebrow: "Prayagraj's Trusted Solar Energy Partner", heroHeading: "PRAYAGRAJ'S TRUSTED SOLAR ENERGY PARTNER", heroHighlight: 'POWER YOUR FUTURE. SAVE MORE EVERY DAY.',
   heroDescription: 'Reliable solar solutions for homes, businesses and industries. From premium solar panels to professional installation, we make clean energy simple and affordable.',
-  showroomPhoto: '/images/awadh-storefront.webp', showroomTitle: 'Visit our Mirzapur showroom.', showroomDescription: 'Visit our office at Bari Basahi, Mirzapur to discuss your solar project, check live inverters, and verify PM Surya Ghar subsidy eligibility.', showroomHref: '/contact', heroPhoto: image,
-  projectsHeading: '2,000+ Successful Installations',
-  projectsSubheading: 'Solar projects across Mirzapur and nearby districts, for homes, businesses and industries.',
+  showroomPhoto: '/images/tejas/office-banner.png', showroomTitle: 'Visit our Prayagraj showroom.', showroomDescription: 'Visit Tejas Enterprises at 226/71, Banaras Road, Phaphamau, Prayagraj to discuss solar panels, rooftop systems and your site requirements.', showroomHref: '/contact', heroPhoto: image,
+  projectsHeading: 'Solar Projects',
+  projectsSubheading: 'Ask our team about rooftop solar projects and verified installation photos.',
   projects: [],
   solutions: [
-    { id: 'homes', title: 'Residential Rooftop Solar', description: 'Complete solar rooftop with Growatt/grid inverters and PM Surya Ghar subsidy assistance.', image: '/images/projects/residential-rooftop-growatt.jpg', href: '/solar-solutions/residential' },
+    { id: 'homes', title: 'Residential Rooftop Solar', description: 'Complete solar rooftop with Growatt/grid inverters and PM Surya Ghar subsidy assistance.', image, href: '/solar-solutions/residential' },
     { id: 'business', title: 'Commercial & Industrial Solar', description: 'High-capacity solar setups for carpet industries, factories, schools, and commercial premises.', image: '/images/projects/commercial-carpet-bhadohi.jpg', href: '/solar-solutions/commercial' },
     { id: 'institutions', title: 'Institutional Solar Systems', description: 'Solar solutions for colleges, hospitals, and government facilities with maximum uptime.', image: '/images/projects/commercial-carpet-bhadohi.jpg', href: '/solar-solutions/institutional' },
-    { id: 'products', title: 'Solar Inverters & Batteries', description: 'Tier-1 Mono PERC panels, smart grid-tied inverters, and advanced battery backup systems.', image: '/images/projects/residential-rooftop-growatt.jpg', href: '/products' },
+    { id: 'products', title: 'Solar Inverters & Batteries', description: 'Tier-1 Mono PERC panels, smart grid-tied inverters, and advanced battery backup systems.', image, href: '/products' },
   ],
   products: [
     { id: 'panels', name: 'Monocrystalline Solar Panels', category: 'Panels', description: 'High-efficiency Tier-1 bifacial and mono PERC solar modules with 25-year performance warranty.', image: '/images/products/golden-solar-panel-array.webp', detail: 'High power density and superior low-light generation.', quote: '', href: '/products/solar-panels' },
-    { id: 'inverters', name: 'Growatt & Smart Solar Inverters', category: 'Inverters', description: 'Smart grid-tied, hybrid, and off-grid solar inverters with live mobile app generation monitoring.', image: '/images/projects/residential-rooftop-growatt.jpg', detail: 'Advanced MPPT tracking and robust surge protection.', quote: '', href: '/products/inverters' },
+    { id: 'inverters', name: 'Growatt & Smart Solar Inverters', category: 'Inverters', description: 'Smart grid-tied, hybrid, and off-grid solar inverters with live mobile app generation monitoring.', image, detail: 'Advanced MPPT tracking and robust surge protection.', quote: '', href: '/products/inverters' },
     { id: 'batteries', name: 'Lithium & Solar Batteries', category: 'Storage', description: 'Heavy-duty tubular and LiFePO4 solar batteries for 24×7 backup during power outages.', image: '/images/products/solar-battery.svg', detail: 'Long cycle life and fast solar charging compatibility.', quote: '', href: '/products/batteries' },
   ],
   calculator: { rupeesPerUnit: 8, monthlyUnitsPerKw: 120, panelWatts: 540, costPerKwMin: 50000, costPerKwMax: 78000 },
@@ -63,12 +65,21 @@ const contentPath = path.join(dataDir, 'site-content.json')
 const starterPhotos: Record<string, string> = {
   '/photo-1509391366360-2e959784a276': image,
   '/photo-1600585154340-be6161a56a0c': '/images/india/indian-solar-rooftops.webp',
-  '/photo-1486406146926-c627a92ad1ab': '/storefront-showcase.webp',
+  '/photo-1486406146926-c627a92ad1ab': '/images/tejas/office-banner.png',
   '/photo-1562774053-701939374585': '/images/india/etawah-school.webp',
   '/photo-1592833159155-c62df1b65634': '/images/products/solar-inverter.svg',
   '/photo-1621905251918-48416bd8575a': '/images/products/solar-battery.svg',
 }
 function currentPhoto(src: string) {
+  const replacedBrandPhoto: Record<string, string> = {
+    '/images/projects/residential-rooftop-growatt.jpg': image,
+    '/images/tejas/showroom.jpeg': '/images/tejas/office-banner.png',
+    '/images/tejas/certificates.jpeg': '/images/tejas/awards-wall.png',
+    '/images/tejas/office-wide.jpeg': '/images/tejas/office-wide-new.jpg',
+    '/images/tejas/office-seating.jpeg': '/images/tejas/office-wide-new.jpg',
+    '/images/tejas/office-panels.jpeg': '/images/tejas/office-banner.png',
+  }
+  if (replacedBrandPhoto[src]) return replacedBrandPhoto[src]
   try {
     const url = new URL(src)
     return url.hostname === 'images.unsplash.com' ? starterPhotos[url.pathname] ?? src : src
@@ -92,12 +103,13 @@ function normalizeContent(stored: Partial<SiteContent>): SiteContent {
       return { ...merged, image: currentPhoto(merged.image ?? '') }
     })
     : defaultSiteContent.projects
-  return { ...defaultSiteContent, ...stored, countdown: { ...defaultSiteContent.countdown, ...stored.countdown }, heroPhoto: currentPhoto(stored.heroPhoto ?? defaultSiteContent.heroPhoto), projects, solutions, products, calculator: { ...defaultSiteContent.calculator, ...stored.calculator } }
+  return { ...defaultSiteContent, ...stored, countdown: { ...defaultSiteContent.countdown, ...stored.countdown }, showroomPhoto: currentPhoto(stored.showroomPhoto ?? defaultSiteContent.showroomPhoto), heroPhoto: currentPhoto(stored.heroPhoto ?? defaultSiteContent.heroPhoto), projects, solutions, products, calculator: { ...defaultSiteContent.calculator, ...stored.calculator } }
 }
 
 export async function getSiteContent(): Promise<SiteContent> {
+  if (githubContentConfigured()) return normalizeContent(trackedContent as Partial<SiteContent>)
   if (usesCloudflareD1()) {
-    const rows = await queryD1<{ content: string }>('SELECT content FROM site_content WHERE site_key = ? LIMIT 1', ['awadh'])
+    const rows = await queryD1<{ content: string }>('SELECT content FROM site_content WHERE site_key = ? LIMIT 1', ['tejas'])
     return normalizeContent(rows[0] ? JSON.parse(rows[0].content) as Partial<SiteContent> : {})
   }
   try {
@@ -106,25 +118,28 @@ export async function getSiteContent(): Promise<SiteContent> {
   } catch { return defaultSiteContent }
 }
 
-export async function saveSiteContent(content: SiteContent) {
+export async function saveSiteContent(content: SiteContent, uploads: PendingUpload[] = []) {
+  if (githubContentConfigured()) return commitGithubContent(content, uploads)
   if (usesCloudflareD1()) {
-    await queryD1('INSERT INTO site_content (site_key, content, updated_at) VALUES (?, ?, ?) ON CONFLICT(site_key) DO UPDATE SET content = excluded.content, updated_at = excluded.updated_at', ['awadh', JSON.stringify(content), new Date().toISOString()])
-    return
+    await queryD1('INSERT INTO site_content (site_key, content, updated_at) VALUES (?, ?, ?) ON CONFLICT(site_key) DO UPDATE SET content = excluded.content, updated_at = excluded.updated_at', ['tejas', JSON.stringify(content), new Date().toISOString()])
+    return { mode: 'cloudflare' as const }
   }
   await mkdir(dataDir, { recursive: true })
   const tempPath = `${contentPath}.${process.pid}.tmp`
   await writeFile(tempPath, JSON.stringify(content, null, 2), { mode: 0o600 })
   await rename(tempPath, contentPath)
+  return { mode: 'local' as const }
 }
 
 export async function saveUploadedImage(filename: string, content: Buffer) {
+  if (githubContentConfigured()) return stageGithubImage(filename, content)
   if (usesCloudflareD1()) {
     const { putD1Image } = await import('@/lib/cloudflare-media')
     await putD1Image(filename, content)
-    return `/api/media/${filename}`
+    return { url: `/api/media/${filename}` }
   }
   const directory = path.join(dataDir, 'uploads')
   await mkdir(directory, { recursive: true })
   await writeFile(path.join(directory, filename), content, { flag: 'wx', mode: 0o600 })
-  return `/api/media/${filename}`
+  return { url: `/api/media/${filename}` }
 }

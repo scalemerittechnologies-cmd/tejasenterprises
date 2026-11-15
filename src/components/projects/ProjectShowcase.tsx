@@ -6,12 +6,13 @@ import { useRouter } from 'next/navigation'
 import { ArrowDown, ArrowRight, ArrowUp, Check, ImagePlus, LockKeyhole, MapPin, Pencil, Plus, Save, Trash2, X, Zap } from 'lucide-react'
 import { T, useLanguage } from '@/components/language/LanguageProvider'
 import type { Project } from '@/lib/site-content'
+import type { PendingUpload } from '@/lib/github-content'
 import { ADMIN_TAB_SESSION_KEY } from '@/components/admin/AdminTabSessionGuard'
 
 const categories = ['All Projects', 'Residential', 'Commercial', 'Industrial'] as const
 type Filter = (typeof categories)[number]
 const demoProjects: Project[] = [
-  { id: 'demo-residential', title: 'DEMO — Residential Rooftop Solar', description: 'Sample project details. Replace this text and photo with your completed home installation.', category: 'Residential', location: 'Mirzapur (demo)', capacity: '5 kW (demo)', image: '/images/projects/residential-rooftop-growatt.jpg' },
+  { id: 'demo-residential', title: 'DEMO — Residential Rooftop Solar', description: 'Sample project details. Replace this text and photo with your completed home installation.', category: 'Residential', location: 'Prayagraj (demo)', capacity: '5 kW (demo)', image: '/images/tejas/powering-homes.webp' },
   { id: 'solar-panel-stock', title: 'Solar Panels Ready for Installation', description: 'Solar panels stacked and ready for upcoming rooftop installations. Talk to our team about panel selection and a system tailored to your property.', category: 'Commercial', location: '', capacity: '', image: '/images/projects/solar-panel-stock.png' },
   { id: 'farmhouse-rooftop', title: 'Farmhouse Rooftop Solar', description: 'Elevated rooftop solar panels on a rural home, with farmland surrounding the property. Explore a solar setup designed for your roof and energy needs.', category: 'Residential', location: '', capacity: '', image: '/images/projects/farmhouse-rooftop-solar.png' },
 ]
@@ -37,6 +38,8 @@ export function ProjectShowcase({ projects, heading, subheading, canEdit = false
   const [saving, setSaving] = useState(false)
   const [notice, setNotice] = useState('')
   const [uploading, setUploading] = useState<string | null>(null)
+  const [pendingUploads, setPendingUploads] = useState<PendingUpload[]>([])
+  const [photoPreviews, setPhotoPreviews] = useState<Record<string, string>>({})
   const [demoMode, setDemoMode] = useState(projects.some(isDemoProject))
   const [tabSessionActive, setTabSessionActive] = useState(false)
   const { language } = useLanguage()
@@ -85,8 +88,12 @@ export function ProjectShowcase({ projects, heading, subheading, canEdit = false
       const { prepareImageUpload } = await import('@/lib/prepare-image-upload')
       const form = new FormData(); form.set('file', await prepareImageUpload(file))
       const response = await fetch('/api/admin/upload', { method: 'POST', body: form })
-      const data = await response.json() as { url?: string; error?: string }
+      const data = await response.json() as { url?: string; sha?: string; error?: string }
       if (!response.ok || !data.url) throw new Error(data.error || 'Photo upload failed.')
+      if (data.sha) {
+        setPendingUploads(current => [...current, { url: data.url!, sha: data.sha! }])
+        setPhotoPreviews(current => ({ ...current, [data.url!]: URL.createObjectURL(file) }))
+      }
       changeProject(id, 'image', data.url)
     } catch (error) { setNotice(error instanceof Error ? error.message : 'Photo upload failed.') }
     finally { setUploading(null) }
@@ -94,10 +101,12 @@ export function ProjectShowcase({ projects, heading, subheading, canEdit = false
   async function publish() {
     setSaving(true); setNotice('')
     try {
-      const response = await fetch('/api/admin/projects', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ heading: title, subheading: intro, projects: items }) })
-      const data = await response.json() as { error?: string }
+      const referenced = new Set(items.map(item => item.image))
+      const response = await fetch('/api/admin/projects', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ heading: title, subheading: intro, projects: items, pendingUploads: pendingUploads.filter(upload => referenced.has(upload.url)) }) })
+      const data = await response.json() as { error?: string; mode?: string }
       if (!response.ok) throw new Error(data.error || 'Could not publish projects.')
-      setNotice('Changes saved and published.'); setDemoMode(items.some(isDemoProject)); setEditing(false)
+      setPendingUploads([])
+      setNotice(data.mode === 'github' ? 'Saved to GitHub. Vercel deployment is in progress.' : 'Changes saved and published.'); setDemoMode(items.some(isDemoProject)); setEditing(false)
       return true
     } catch (error) { setNotice(error instanceof Error ? error.message : 'Could not publish projects.') }
     finally { setSaving(false) }
@@ -152,7 +161,7 @@ export function ProjectShowcase({ projects, heading, subheading, canEdit = false
           {visibleProjects.map((project) => (
             <article className="showcase-card project-gallery-card" key={project.id}>
               <div className="showcase-image-wrap">
-                <img src={project.image} alt={project.title} loading="lazy" decoding="async" />
+                <img src={photoPreviews[project.image] ?? project.image} alt={project.title} loading="lazy" decoding="async" />
                 <span className={`showcase-badge ${project.category.toLowerCase()}`}>
                   {language === 'hi' ? categoryHindi[project.category] : project.category}
                 </span>
@@ -187,8 +196,8 @@ export function ProjectShowcase({ projects, heading, subheading, canEdit = false
           <div className="project-editor-toolbar"><div className="project-editor-tabs">{categories.map(category => <button type="button" key={category} className={filter === category ? 'active' : ''} onClick={() => setFilter(category)}>{category}</button>)}</div><button type="button" className="project-editor-add" onClick={addProject}><Plus size={17}/> Add project</button></div>
           <div className="project-editor-list">{items.map((project, index) => <article className="project-editor-card" key={project.id}>
             <div className="project-editor-card-head"><b>Project {index + 1}</b><div><button type="button" aria-label="Move project up" disabled={index === 0} onClick={() => setItems(current => { const next=[...current]; [next[index-1],next[index]]=[next[index],next[index-1]]; return next })}><ArrowUp size={16}/></button><button type="button" aria-label="Move project down" disabled={index === items.length-1} onClick={() => setItems(current => { const next=[...current]; [next[index+1],next[index]]=[next[index],next[index+1]]; return next })}><ArrowDown size={16}/></button><button type="button" className="delete" onClick={() => setItems(current => current.filter(item => item.id !== project.id))}><Trash2 size={15}/> Delete</button></div></div>
-            <div className="project-editor-card-body"><div className="project-editor-photo">{project.image ? <img src={project.image} alt="Project preview"/> : <div><ImagePlus size={25}/><span>No photo selected</span></div>}<label className="project-editor-upload">{uploading === project.id ? 'Uploading…' : project.image ? 'Replace photo' : 'Upload photo'}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" onChange={event => void uploadPhoto(project.id, event)}/></label></div>
-              <div className="project-editor-fields"><label>Project title<input value={project.title} onChange={e => changeProject(project.id,'title',e.target.value)} placeholder="e.g. Rooftop solar installation" maxLength={140}/></label><label>Category<select value={project.category} onChange={e => changeProject(project.id,'category',e.target.value)}><option>Residential</option><option>Commercial</option><option>Industrial</option></select></label><label className="wide">Details<textarea value={project.description} onChange={e => changeProject(project.id,'description',e.target.value)} placeholder="Short project description" maxLength={500} rows={2}/></label><label>Location<input value={project.location} onChange={e => changeProject(project.id,'location',e.target.value)} placeholder="Mirzapur" maxLength={120}/></label><label>Capacity<input value={project.capacity} onChange={e => changeProject(project.id,'capacity',e.target.value)} placeholder="e.g. 5 kW" maxLength={80}/></label></div>
+            <div className="project-editor-card-body"><div className="project-editor-photo">{project.image ? <img src={photoPreviews[project.image] ?? project.image} alt="Project preview"/> : <div><ImagePlus size={25}/><span>No photo selected</span></div>}<label className="project-editor-upload">{uploading === project.id ? 'Uploading…' : project.image ? 'Replace photo' : 'Upload photo'}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" onChange={event => void uploadPhoto(project.id, event)}/></label></div>
+              <div className="project-editor-fields"><label>Project title<input value={project.title} onChange={e => changeProject(project.id,'title',e.target.value)} placeholder="e.g. Rooftop solar installation" maxLength={140}/></label><label>Category<select value={project.category} onChange={e => changeProject(project.id,'category',e.target.value)}><option>Residential</option><option>Commercial</option><option>Industrial</option></select></label><label className="wide">Details<textarea value={project.description} onChange={e => changeProject(project.id,'description',e.target.value)} placeholder="Short project description" maxLength={500} rows={2}/></label><label>Location<input value={project.location} onChange={e => changeProject(project.id,'location',e.target.value)} placeholder="Prayagraj" maxLength={120}/></label><label>Capacity<input value={project.capacity} onChange={e => changeProject(project.id,'capacity',e.target.value)} placeholder="e.g. 5 kW" maxLength={80}/></label></div>
             </div>
           </article>)}{items.length === 0 && <p className="project-editor-empty">No projects added yet. Add your first project and upload its photo.</p>}</div>
           <footer className="project-editor-footer"><span>{items.length} project{items.length === 1 ? '' : 's'}</span>{notice && <p role="status">{notice}</p>}<div className="project-editor-footer-actions"><button type="button" className="project-editor-lock" onClick={() => void saveAndLock()} disabled={saving || Boolean(uploading)}><LockKeyhole size={16}/> Save & lock</button><button type="button" onClick={() => void publish()} disabled={saving || Boolean(uploading)}><Save size={17}/>{saving ? 'Publishing…' : 'Save & publish'} <Check size={16}/></button></div></footer>

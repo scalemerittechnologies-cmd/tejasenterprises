@@ -6,7 +6,7 @@ The browser accepts photos up to 8 MB and compresses large selections before upl
 
 ## 1. Create the D1 database
 
-1. In the Cloudflare dashboard, create a **D1 database** named `awadh-website`. Copy its database ID and your 32-character account ID.
+1. In the Cloudflare dashboard, create a **D1 database** named `tejas-website`. Copy its database ID and your 32-character account ID.
 2. Create a Cloudflare API token with **D1 Read** and **D1 Write** access for this account. Do not use the global API key.
 
 Cloudflare documentation: [D1 API](https://developers.cloudflare.com/api/resources/d1/subresources/database/methods/query/), [D1 limits](https://developers.cloudflare.com/d1/platform/limits/), [free-tier behavior](https://developers.cloudflare.com/d1/reference/faq/).
@@ -35,7 +35,7 @@ This creates the D1 tables from `cloudflare/schema.sql`, copies the current `dat
 
 ## 4. Connect GitHub to Netlify
 
-1. Import `scalemerittechnologies-cmd/Awadh_Solar` as a **Next.js** project in Netlify. Netlify's Git integration builds on pushes and makes preview deployments for pull requests.
+1. Import the Tejas Enterprises Git repository as a **Next.js** project in Netlify. Netlify's Git integration builds on pushes and makes preview deployments for pull requests.
 2. In **Project configuration → Environment variables**, add the three `CLOUDFLARE_*` variables above and `ADMIN_USERNAME`, `ADMIN_PASSWORD`, and `ADMIN_SESSION_SECRET`. Set them for runtime Functions and builds. For deploy previews, use separate D1 credentials if you want to keep test edits away from live data.
 3. Deploy after the migration script succeeds. The build command is `npm run build`.
 

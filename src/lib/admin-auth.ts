@@ -2,7 +2,7 @@ import 'server-only'
 import { createHmac, timingSafeEqual } from 'node:crypto'
 import { cookies } from 'next/headers'
 
-const COOKIE_NAME = 'awadh_admin_session'
+const COOKIE_NAME = 'tejas_admin_session'
 const SESSION_SECONDS = 60 * 60 * 8
 const secret = () => process.env.ADMIN_SESSION_SECRET ?? ''
 

@@ -5,7 +5,7 @@ import { T, useLanguage } from '@/components/language/LanguageProvider'
 
 const taglines = [
   { en: 'POWER YOUR FUTURE. SAVE MORE EVERY DAY.', hi: 'सौर ऊर्जा अपनाएं। हर दिन बचत पाएं।' },
-  { en: "MIRZAPUR'S TRUSTED SOLAR BRAND.", hi: 'मिर्ज़ापुर का भरोसेमंद सोलर ब्रांड।' },
+  { en: "PRAYAGRAJ'S TRUSTED SOLAR BRAND.", hi: 'प्रयागराज का भरोसेमंद सोलर ब्रांड।' },
   { en: 'SMART SOLAR. REAL SAVINGS. LOCAL SUPPORT.', hi: 'स्मार्ट सोलर। बेहतर बचत। स्थानीय सहायता।' },
 ]
 

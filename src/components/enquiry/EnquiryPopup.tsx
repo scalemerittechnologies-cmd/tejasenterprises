@@ -42,7 +42,7 @@ const defaultCopy: PopupCopy = {
   submitEn: 'Get Free Quote & Site Survey', submitHi: 'मुफ्त कोटेशन और साइट सर्वे पाएं',
 }
 
-export function EnquiryPopup({ phone = '89530 69011', copy = defaultCopy }: { phone?: string; copy?: PopupCopy }) {
+export function EnquiryPopup({ phone = '099356 85939', copy = defaultCopy }: { phone?: string; copy?: PopupCopy }) {
   const [open, setOpen] = useState(false)
   const [busy, setBusy] = useState(false)
   const [submitted, setSubmitted] = useState(false)
@@ -56,14 +56,14 @@ export function EnquiryPopup({ phone = '89530 69011', copy = defaultCopy }: { ph
 
   const digits = phone.replace(/\D/g, '')
 
-  // Listen for 'awadh-enquire' custom events
+  // Listen for 'tejas-enquire' custom events
   useEffect(() => {
     const handleOpen = () => {
       setSubmitted(false)
       setErrorMessage('')
       setOpen(true)
     }
-    window.addEventListener('awadh-enquire', handleOpen)
+    window.addEventListener('tejas-enquire', handleOpen)
 
     // Open shortly after the page becomes interactive.
     const timer = setTimeout(() => {
@@ -75,7 +75,7 @@ export function EnquiryPopup({ phone = '89530 69011', copy = defaultCopy }: { ph
     }, 350)
 
     return () => {
-      window.removeEventListener('awadh-enquire', handleOpen)
+      window.removeEventListener('tejas-enquire', handleOpen)
       clearTimeout(timer)
     }
   }, [])
@@ -83,7 +83,7 @@ export function EnquiryPopup({ phone = '89530 69011', copy = defaultCopy }: { ph
   const handleClose = () => {
     setOpen(false)
     try {
-      sessionStorage.setItem('awadh-enquiry-dismissed', 'true')
+      sessionStorage.setItem('tejas-enquiry-dismissed', 'true')
     } catch {}
   }
 
@@ -125,10 +125,11 @@ export function EnquiryPopup({ phone = '89530 69011', copy = defaultCopy }: { ph
       phone: String(form.get('phone') || '').trim(),
       requirement: String(form.get('requirement') || ''),
       billRange: String(form.get('billRange') || ''),
-      locality: String(form.get('locality') || 'Mirzapur'),
+      locality: String(form.get('locality') || 'Prayagraj'),
       consent: form.get('consent') === 'on',
       website: String(form.get('website') || ''), // honeypot
     }
+    if (!payload.website) { window.open(getWhatsAppUrl(`Hello Tejas Enterprises, I would like a solar quote.\nName: ${payload.name}\nMobile: ${payload.phone}\nRequirement: ${payload.requirement}\nMonthly bill: ${payload.billRange}\nLocation: ${payload.locality}`), '_blank', 'noopener,noreferrer'); setBusy(false); handleClose(); return }
 
     try {
       const res = await fetch('/api/enquiry', {
@@ -159,7 +160,7 @@ export function EnquiryPopup({ phone = '89530 69011', copy = defaultCopy }: { ph
       <div className="floating-contact" aria-label="Quick contact links">
         <a
           href={getWhatsAppUrl(
-            'Hello! I want a free solar consultation and subsidy check for my property in Mirzapur/UP.'
+            'Hello! I want a free solar consultation and subsidy check for my property in Prayagraj/UP.'
           )}
           target="_blank"
           rel="noreferrer"
@@ -243,7 +244,7 @@ export function EnquiryPopup({ phone = '89530 69011', copy = defaultCopy }: { ph
             ) : (
               <>
                 <div className="solar-buddy-intro">
-                  <div><span className="buddy-eyebrow"><span className="buddy-brand">AWADH SOLAR</span><span className="buddy-brand-caption">YOUR SOLAR PARTNER</span></span>
+                  <div><span className="buddy-eyebrow"><span className="buddy-brand">TEJAS ENTERPRISES</span><span className="buddy-brand-caption">YOUR SOLAR PARTNER</span></span>
                     <h2 id="enquiry-dialog-title"><T hi="मिलिए आपके सोलर साथी से">Meet Your Solar Buddy</T><strong>SUNtosh</strong></h2>
                     <p className="buddy-assistant-copy">Your <em>Virtual</em> assistant for all things</p>
                     <b className="buddy-scheme-name">PM Surya Ghar!</b>
@@ -351,8 +352,8 @@ export function EnquiryPopup({ phone = '89530 69011', copy = defaultCopy }: { ph
                         id="modal-loc"
                         name="locality"
                         type="text"
-                        placeholder={hi ? 'मिर्ज़ापुर / विंध्याचल / सोनभद्र आदि' : 'Mirzapur / Vindhyachal / Varanasi etc.'}
-                        defaultValue="Mirzapur"
+                        placeholder={hi ? 'प्रयागराज / विंध्याचल / सोनभद्र आदि' : 'Prayagraj / Vindhyachal / Varanasi etc.'}
+                        defaultValue="Prayagraj"
                       />
                     </div>
                   </div>

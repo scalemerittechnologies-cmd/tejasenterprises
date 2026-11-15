@@ -19,10 +19,11 @@ import { T } from '@/components/language/LanguageProvider'
 import { EnquiryTriggerButton } from '@/components/ui/EnquiryTriggerButton'
 import { getWhatsAppUrl } from '@/lib/whatsapp'
 import { GOOGLE_BUSINESS_PROFILE_URL } from '@/lib/location'
+import { LocationMapPreview } from '@/components/location/LocationMapPreview'
 
 type FooterProps = { brand: string; phone: string; address: string }
 
-export function Footer({ brand = 'Over The Top Solar', phone = '89530 69011', address }: FooterProps) {
+export function Footer({ brand = 'Tejas Enterprises', phone = '099356 85939', address }: FooterProps) {
   const digits = phone.replace(/\D/g, '')
 
   return (
@@ -33,8 +34,8 @@ export function Footer({ brand = 'Over The Top Solar', phone = '89530 69011', ad
           <div className="trust-strip-item">
             <ShieldCheck size={22} className="text-amber-400" />
             <div>
-              <strong><T hi="सरकारी पंजीकृत वेंडर">Govt. Registered Partner</T></strong>
-              <small><T hi="पीएम सूर्य घर योजना अनुमोदित">PM Surya Ghar Authorized</T></small>
+              <strong><T hi="स्थानीय सोलर टीम">Local Solar Team</T></strong>
+              <small><T hi="प्रयागराज में मार्गदर्शन">Guidance in Prayagraj</T></small>
             </div>
           </div>
           <div className="trust-strip-item">
@@ -47,8 +48,8 @@ export function Footer({ brand = 'Over The Top Solar', phone = '89530 69011', ad
           <div className="trust-strip-item">
             <CheckCircle2 size={22} className="text-emerald-400" />
             <div>
-              <strong><T hi="2,000+ सफल प्रोजेक्ट्स">2,000+ Projects Completed</T></strong>
-              <small><T hi="मिर्ज़ापुर एवं पूर्वांचल में">Across Mirzapur & UP</T></small>
+              <strong><T hi="प्रयागराज में स्थानीय सेवा">Local Solar Support</T></strong>
+              <small><T hi="फाफामऊ में हमारा शोरूम">Showroom in Phaphamau</T></small>
             </div>
           </div>
           <div className="trust-strip-item">
@@ -67,22 +68,23 @@ export function Footer({ brand = 'Over The Top Solar', phone = '89530 69011', ad
         <div className="footer-col brand-col">
           <Link href="/" className="footer-brand-link" aria-label={`${brand} home`}>
             <img
-              src="/images/awadh-logo.jpg"
-              alt="Awadh Enterprises Logo"
+              src="/images/tejas/logo.jpeg"
+              alt="Tejas Enterprises Logo"
               className="footer-brand-logo-img"
-              width={180}
-              height={48}
+              width={68}
+              height={68}
             />
+            <span className="footer-brand-wordmark">TEJAS <small>ENTERPRISES</small></span>
           </Link>
           <p className="footer-bio-text">
-            <T hi="मिर्ज़ापुर और पूर्वांचल का विश्वसनीय सोलर समाधान प्रदाता। हम आवासीय छतों, वाणिज्यिक कारखानों और संस्थानों के लिए उच्च गुणवत्ता वाले सोलर प्लांट्स स्थापित करते हैं।">
-              Eastern Uttar Pradesh&apos;s leading clean energy contractor. We engineer, install, and service high-yield rooftop solar arrays with government subsidy facilitation and lifetime support.
+            <T hi="प्रयागराज और पूर्वांचल का विश्वसनीय सोलर समाधान प्रदाता। हम आवासीय छतों, वाणिज्यिक कारखानों और संस्थानों के लिए उच्च गुणवत्ता वाले सोलर प्लांट्स स्थापित करते हैं।">
+              Solar products and rooftop solutions from our showroom in Phaphamau, Prayagraj. Talk with us about your property, equipment options and available scheme guidance.
             </T>
           </p>
           <div className="footer-hours-box">
             <Clock size={15} className="text-blue-400 flex-none" />
             <div>
-              <strong>Office Hours:</strong> Mon – Sat: 9:30 AM – 7:00 PM
+              <strong>Visit our office:</strong> Please call ahead
             </div>
           </div>
         </div>
@@ -157,7 +159,7 @@ export function Footer({ brand = 'Over The Top Solar', phone = '89530 69011', ad
           <h3><T hi="संपर्क एवं सहायता">Connect with Us</T></h3>
           <address className="footer-address">
             <MapPin size={17} className="text-amber-400 flex-none" />
-            <span>{address}
+            <span><a className="footer-address-link" href={GOOGLE_BUSINESS_PROFILE_URL} target="_blank" rel="noopener noreferrer">{address}</a>
               <a className="footer-map-link" href={GOOGLE_BUSINESS_PROFILE_URL} target="_blank" rel="noopener noreferrer">
                 <ExternalLink size={14} aria-hidden="true" />
                 <T hi="गूगल पर हमारी लोकेशन देखें">Find us on Google</T>
@@ -194,10 +196,21 @@ export function Footer({ brand = 'Over The Top Solar', phone = '89530 69011', ad
         </div>
       </div>
 
+      <section className="footer-location-panel" aria-label="Tejas Enterprises location">
+        <div className="footer-location-copy">
+          <span className="footer-location-eyebrow">OUR SHOWROOM · PHAPHAMAU</span>
+          <h2>Visit Tejas Enterprises</h2>
+          <p>Find us near Banaras Road, Prayagraj. Tap the map or address for our exact location.</p>
+          <a href={GOOGLE_BUSINESS_PROFILE_URL} target="_blank" rel="noopener noreferrer" className="footer-location-address"><MapPin size={20} aria-hidden="true" />{address}</a>
+          <a href={GOOGLE_BUSINESS_PROFILE_URL} target="_blank" rel="noopener noreferrer" className="footer-location-directions">Open in Maps <ExternalLink size={16} aria-hidden="true" /></a>
+        </div>
+        <LocationMapPreview className="footer-map-preview" />
+      </section>
+
       {/* Bottom Legal & Copyright Bar */}
       <div className="footer-bottom-bar">
         <div className="bottom-bar-inner">
-          <p>© {new Date().getFullYear()} Awadh Enterprises (Over The Top Solar). <T>All rights reserved.</T></p>
+          <p>© {new Date().getFullYear()} Tejas Enterprises. <T>All rights reserved.</T></p>
           <div className="footer-legal-links">
             <Link href="/privacy-policy"><T>Privacy Policy</T></Link>
             <span className="dot">•</span>
