@@ -18,7 +18,7 @@ import {
 import { T } from '@/components/language/LanguageProvider'
 import { EnquiryTriggerButton } from '@/components/ui/EnquiryTriggerButton'
 import { getWhatsAppUrl } from '@/lib/whatsapp'
-import { GOOGLE_BUSINESS_PROFILE_URL } from '@/lib/location'
+import { GoogleMapsLink } from '@/components/location/GoogleMapsLink'
 import { LocationMapPreview } from '@/components/location/LocationMapPreview'
 
 type FooterProps = { brand: string; phone: string; address: string }
@@ -159,11 +159,11 @@ export function Footer({ brand = 'Tejas Enterprises', phone = '099356 85939', ad
           <h3><T hi="संपर्क एवं सहायता">Connect with Us</T></h3>
           <address className="footer-address">
             <MapPin size={17} className="text-amber-400 flex-none" />
-            <span><a className="footer-address-link" href={GOOGLE_BUSINESS_PROFILE_URL} target="_blank" rel="noopener noreferrer">{address}</a>
-              <a className="footer-map-link" href={GOOGLE_BUSINESS_PROFILE_URL} target="_blank" rel="noopener noreferrer">
+            <span><GoogleMapsLink className="footer-address-link">{address}</GoogleMapsLink>
+              <GoogleMapsLink className="footer-map-link">
                 <ExternalLink size={14} aria-hidden="true" />
                 <T hi="गूगल पर हमारी लोकेशन देखें">Find us on Google</T>
-              </a>
+              </GoogleMapsLink>
             </span>
           </address>
 
@@ -201,8 +201,8 @@ export function Footer({ brand = 'Tejas Enterprises', phone = '099356 85939', ad
           <span className="footer-location-eyebrow">OUR SHOWROOM · PHAPHAMAU</span>
           <h2>Visit Tejas Enterprises</h2>
           <p>Find us near Banaras Road, Prayagraj. Tap the map or address for our exact location.</p>
-          <a href={GOOGLE_BUSINESS_PROFILE_URL} target="_blank" rel="noopener noreferrer" className="footer-location-address"><MapPin size={20} aria-hidden="true" />{address}</a>
-          <a href={GOOGLE_BUSINESS_PROFILE_URL} target="_blank" rel="noopener noreferrer" className="footer-location-directions">Open in Maps <ExternalLink size={16} aria-hidden="true" /></a>
+          <GoogleMapsLink className="footer-location-address"><MapPin size={20} aria-hidden="true" />{address}</GoogleMapsLink>
+          <GoogleMapsLink className="footer-location-directions">Open in Maps <ExternalLink size={16} aria-hidden="true" /></GoogleMapsLink>
         </div>
         <LocationMapPreview className="footer-map-preview" />
       </section>

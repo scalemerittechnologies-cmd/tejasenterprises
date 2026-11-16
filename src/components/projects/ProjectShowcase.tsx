@@ -44,12 +44,17 @@ export function ProjectShowcase({ projects, heading, subheading, canEdit = false
   const [tabSessionActive, setTabSessionActive] = useState(false)
   const { language } = useLanguage()
   const router = useRouter()
+  const availableCategories = useMemo(
+    () => categories.filter(category => category === 'All Projects' || items.some(project => project.title.trim() && project.image.trim() && project.category === category)),
+    [items],
+  )
+  const activeFilter = availableCategories.length > 2 && availableCategories.includes(filter) ? filter : 'All Projects'
   const visibleProjects = useMemo(
     () => {
       const published = items.filter(project => project.title.trim() && project.image.trim())
-      return filter === 'All Projects' ? published : published.filter((project) => project.category === filter)
+      return activeFilter === 'All Projects' ? published : published.filter((project) => project.category === activeFilter)
     },
-    [filter, items],
+    [activeFilter, items],
   )
   useEffect(() => {
     const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined
@@ -134,26 +139,27 @@ export function ProjectShowcase({ projects, heading, subheading, canEdit = false
   return (
     <section id="projects-showcase" className="projects-showcase-section" aria-labelledby="showcase-heading">
       <div className="section-heading">
-        <span id="showcase-heading" className="eyebrow"><Zap size={14} className="text-blue-600 inline mr-1" /><T hi="🏗️ हमारे Projects">OUR PROJECTS</T></span>
+        <span className="eyebrow"><Zap size={14} className="text-blue-600 inline mr-1" /><T hi="🏗️ हमारे Projects">OUR PROJECTS</T></span>
+        <h2 id="showcase-heading">{title}</h2>
         <p>{intro}</p>
         <div className="project-edit-entry">
           {canEdit && tabSessionActive && <button type="button" onClick={openEditor} aria-label="Edit projects" title="Edit projects"><Pencil size={17}/> <span>Edit projects</span></button>}
         </div>
       </div>
 
-      <div className="project-filters" role="group" aria-label={language === 'hi' ? 'प्रोजेक्ट श्रेणी चुनें' : 'Filter projects by category'}>
-        {categories.map((category) => (
+      {availableCategories.length > 2 && <div className="project-filters" role="group" aria-label={language === 'hi' ? 'प्रोजेक्ट श्रेणी चुनें' : 'Filter projects by category'}>
+        {availableCategories.map((category) => (
           <button
             type="button"
             key={category}
-            className={filter === category ? 'active' : ''}
-            aria-pressed={filter === category}
+            className={activeFilter === category ? 'active' : ''}
+            aria-pressed={activeFilter === category}
             onClick={() => setFilter(category)}
           >
             {language === 'hi' ? filterHindi[category] : category}
           </button>
         ))}
-      </div>
+      </div>}
       {notice && !editing && <p className="project-editor-published" role="status">{notice}</p>}
 
       {visibleProjects.length ? (

@@ -20,35 +20,53 @@
   "showroomDescription": "Visit Tejas Enterprises at 226/71, Banaras Road, Phaphamau, Prayagraj to discuss solar panels, rooftop systems and your site requirements.",
   "showroomHref": "/contact",
   "heroPhoto": "/images/tejas/powering-homes.webp",
-  "projectsHeading": "Solar Projects",
-  "projectsSubheading": "Ask our team about rooftop solar projects and verified installation photos.",
+  "projectsHeading": "Real Rooftop Installations",
+  "projectsSubheading": "Photos from rooftop solar installations in and around Prayagraj.",
   "projects": [
     {
-      "id": "demo-residential",
-      "title": "DEMO — Residential Rooftop Solar",
-      "description": "Sample project details. Replace this text and photo with your completed home installation.",
+      "id": "phaphamau-rooftop-solar",
+      "title": "Phaphamau Rooftop Solar",
+      "description": "Solar panels on a raised rooftop structure in Phaphamau, Prayagraj.",
       "category": "Residential",
-      "location": "Prayagraj (demo)",
-      "capacity": "5 kW (demo)",
-      "image": "/images/tejas/powering-homes.webp"
+      "location": "Phaphamau, Prayagraj",
+      "capacity": "",
+      "image": "/images/projects/real-installations/phaphamau-rooftop-solar.jpg"
     },
     {
-      "id": "solar-panel-stock",
-      "title": "Solar Panels Ready for Installation",
-      "description": "Solar panels stacked and ready for upcoming rooftop installations. Talk to our team about panel selection and a system tailored to your property.",
-      "category": "Commercial",
-      "location": "",
+      "id": "george-town-solar-canopy",
+      "title": "George Town Solar Canopy",
+      "description": "Elevated solar panel canopy on a residential terrace in George Town, Prayagraj.",
+      "category": "Residential",
+      "location": "George Town, Prayagraj",
       "capacity": "",
-      "image": "/images/projects/solar-panel-stock.png"
+      "image": "/images/projects/real-installations/george-town-solar-canopy.jpg"
     },
     {
-      "id": "farmhouse-rooftop",
-      "title": "Farmhouse Rooftop Solar",
-      "description": "Elevated rooftop solar panels on a rural home, with farmland surrounding the property. Explore a solar setup designed for your roof and energy needs.",
+      "id": "mehdaori-rooftop-solar",
+      "title": "Mehdaori Rooftop Solar",
+      "description": "Raised rooftop solar array in the Mehdaori area of Prayagraj.",
+      "category": "Residential",
+      "location": "Mehdaori, Prayagraj",
+      "capacity": "",
+      "image": "/images/projects/real-installations/mehdaori-rooftop-solar.jpg"
+    },
+    {
+      "id": "sainik-colony-rooftop-solar",
+      "title": "Sainik Colony Rooftop Solar",
+      "description": "Elevated solar array on a residential terrace in Sainik Colony, Prayagraj.",
+      "category": "Residential",
+      "location": "Sainik Colony, Prayagraj",
+      "capacity": "",
+      "image": "/images/projects/real-installations/sainik-colony-rooftop-solar.jpg"
+    },
+    {
+      "id": "rooftop-solar-array",
+      "title": "Rooftop Solar Array",
+      "description": "Rooftop solar panels mounted on a raised structure.",
       "category": "Residential",
       "location": "",
       "capacity": "",
-      "image": "/images/projects/farmhouse-rooftop-solar.png"
+      "image": "/images/projects/real-installations/rooftop-solar-array.jpg"
     }
   ],
   "solutions": [
@@ -97,7 +115,7 @@
       "name": "Growatt & Smart Solar Inverters",
       "category": "Inverters",
       "description": "Smart grid-tied, hybrid, and off-grid solar inverters with live mobile app generation monitoring.",
-      "image": "/images/tejas/powering-homes.webp",
+      "image": "/images/products/tejas-solar-energy-rooftop-banner.png",
       "detail": "Advanced MPPT tracking and robust surge protection.",
       "quote": "",
       "href": "/products/inverters"

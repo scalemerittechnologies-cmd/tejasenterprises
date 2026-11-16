@@ -29,6 +29,7 @@ import {
 import { Hero } from '@/components/hero/Hero'
 import { BrandTrustStrip } from '@/components/hero/BrandTrustStrip'
 import { ProjectShowcase } from '@/components/projects/ProjectShowcase'
+import { ProjectVideos } from '@/components/projects/ProjectVideos'
 import { Navigation } from '@/components/navigation/Navigation'
 import { getSiteContent } from '@/lib/site-content'
 import { getWhatsAppUrl } from '@/lib/whatsapp'
@@ -41,7 +42,7 @@ import { EnquiryTriggerButton } from '@/components/ui/EnquiryTriggerButton'
 import { isAdminAuthenticated } from '@/lib/admin-auth'
 import { AdminTabSessionGuard } from '@/components/admin/AdminTabSessionGuard'
 import { defaultEnquirySettings, getEnquirySettings } from '@/lib/enquiry-settings'
-import { GOOGLE_BUSINESS_PROFILE_URL } from '@/lib/location'
+import { GoogleMapsLink } from '@/components/location/GoogleMapsLink'
 
 export const dynamic = 'force-dynamic'
 type SolarService = {
@@ -143,6 +144,8 @@ export default async function HomePage() {
 
         <ProjectShowcase projects={content.projects} heading={content.projectsHeading} subheading={content.projectsSubheading} canEdit={canEditProjects} />
 
+        <ProjectVideos />
+
         {/* Solar Solutions Grid */}
         <section id="solutions" className="solutions-section" aria-labelledby="solutions-heading">
           <div className="section-heading">
@@ -209,7 +212,7 @@ export default async function HomePage() {
           <div className="local-team-grid">
             <figure className="local-team-photo-wrap">
               <SitePhoto
-                src="/images/tejas/office-wide-new.jpg"
+                src="/images/tejas/enterprise-office.webp"
                 alt="Inside the Tejas Enterprises solar showroom in Phaphamau"
                 sizes="(max-width: 768px) 90vw, 42vw"
                 className="consultation-photo"
@@ -423,7 +426,7 @@ export default async function HomePage() {
             <MapPin />
             <span>
               <b><T>Based in Prayagraj</T></b>
-              <small><a href={GOOGLE_BUSINESS_PROFILE_URL} target="_blank" rel="noopener noreferrer">{content.address}</a></small>
+              <small><GoogleMapsLink>{content.address}</GoogleMapsLink></small>
             </span>
           </div>
           <EnquiryTriggerButton className="service-strip-cta">

@@ -8,7 +8,7 @@ import { Footer } from '@/components/footer/Footer'
 import { T } from '@/components/language/LanguageProvider'
 import { getSiteContent } from '@/lib/site-content'
 import { SitePhoto } from '@/components/ui/SitePhoto'
-import { GOOGLE_BUSINESS_PROFILE_URL } from '@/lib/location'
+import { GoogleMapsLink } from '@/components/location/GoogleMapsLink'
 
 const pages: Record<string, { title: string; intro: string; body: string[] }> = {
   about: { title: 'Solar solutions, rooted in Prayagraj.', intro: 'Tejas Enterprises helps homes, businesses and institutions explore solar energy with local guidance.', body: ['We are based in Phaphamau, Prayagraj, Uttar Pradesh.', 'Talk with our team about your property, electricity needs and the options available for your site.'] },
@@ -54,7 +54,7 @@ export default async function ContentPage({ params }: { params: Promise<{ slug: 
       {product && <div className="content-product"><SitePhoto src={product.image} sizes="(max-width: 950px) 90vw, 570px" alt={product.image.startsWith('/images/products/') ? `${product.name} category illustration` : undefined} /><div><b>{product.category}</b><p>{product.detail}</p>{product.quote && <p className="product-quote">{product.quote}</p>}<Link href="/contact" className="text-link">Enquire about this product <ArrowRight size={15}/></Link></div></div>}
       {isProductsIndex && <div className="route-product-grid">{site.products.map(item => <article key={item.id}><Link href={item.href} className="route-product-image" aria-label={`Open ${item.name}`}><SitePhoto src={item.image} alt="" sizes="(max-width: 720px) 90vw, 280px" /></Link><div><small>{item.category}</small><h2>{item.name}</h2><p>{item.description}</p>{item.quote && <p className="product-quote">{item.quote}</p>}<Link href={`/products/${item.id}`}>Product details <ArrowRight size={15}/></Link></div></article>)}</div>}
       {!isContact && !isCalculator && !product && <div className="content-details">{(page?.body ?? ['Ask us about your requirements and options for a site assessment.']).map(item => <p key={item}><T>{item}</T></p>)}{isPm && <a className="official-link" href="https://pmsuryaghar.gov.in/" target="_blank" rel="noreferrer"><T>Open the official PM Surya Ghar portal</T> <ArrowRight size={16} /></a>}</div>}
-      {isContact && <><address className="contact-address"><a href={GOOGLE_BUSINESS_PROFILE_URL} target="_blank" rel="noopener noreferrer"><MapPin size={18} /> {site.address}</a></address><a className="contact-phone" href={`tel:${site.phone.replace(/\D/g, '')}`}><Phone size={17} /> {site.phone}</a><ContactForm brand={site.brand}/></>}
+      {isContact && <><address className="contact-address"><GoogleMapsLink><MapPin size={18} /> {site.address}</GoogleMapsLink></address><a className="contact-phone" href={`tel:${site.phone.replace(/\D/g, '')}`}><Phone size={17} /> {site.phone}</a><ContactForm brand={site.brand}/></>}
       {isCalculator && <SolarCalculator assumptions={site.calculator}/>}
       {!isContact && !isCalculator && <Link href="/contact" className="primary-cta page-cta"><T>Talk to our team</T> <ArrowRight size={17} /></Link>}
     </section><aside className="content-aside"><span className="aside-sun">☀</span><h2><T>Sunlight today.</T><br /><T>Brighter tomorrow.</T></h2><p><T>Local solar guidance from</T> {site.brand} in Prayagraj.</p><Link href="/solar-solutions" className="text-link"><T>Explore solar solutions</T> <ArrowRight size={17} /></Link></aside></div>

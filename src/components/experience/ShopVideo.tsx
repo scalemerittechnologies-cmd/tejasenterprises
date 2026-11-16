@@ -15,7 +15,8 @@ import {
 import { T, useLanguage } from '@/components/language/LanguageProvider'
 import type { SiteContent } from '@/lib/site-content'
 import { EnquiryTriggerButton } from '@/components/ui/EnquiryTriggerButton'
-import { GOOGLE_BUSINESS_PROFILE_URL, googleMapsDirectionsUrl } from '@/lib/location'
+import { googleMapsDirectionsUrl } from '@/lib/location'
+import { GoogleMapsLink } from '@/components/location/GoogleMapsLink'
 
 export function ShopVideo({
   content,
@@ -199,11 +200,11 @@ export function ShopVideo({
         </div>
 
         <div className="location-address-group">
-          <p className="location-address-text"><a className="location-address-link" href={GOOGLE_BUSINESS_PROFILE_URL} target="_blank" rel="noopener noreferrer">{content.address}</a></p>
-          <a className="google-profile-link" href={GOOGLE_BUSINESS_PROFILE_URL} target="_blank" rel="noopener noreferrer">
+          <p className="location-address-text"><GoogleMapsLink className="location-address-link">{content.address}</GoogleMapsLink></p>
+          <GoogleMapsLink className="google-profile-link">
             <ExternalLink size={15} aria-hidden="true" />
             <T hi="हमारी गूगल लिस्टिंग देखें">View our Google listing</T>
-          </a>
+          </GoogleMapsLink>
         </div>
 
         <div className="location-hours">
@@ -215,15 +216,13 @@ export function ShopVideo({
         </div>
 
         <div className="location-action-btns">
-          <a
+          <GoogleMapsLink
             className="directions-link"
-            target="_blank"
-            rel="noopener noreferrer"
             href={googleMapsDirectionsUrl(content.address)}
           >
             <NavIcon size={15} />
             <T hi="गूगल मैप्स पर रास्ता देखें">Get Google Maps Directions</T>
-          </a>
+          </GoogleMapsLink>
 
           <a
             className="quick-call-link"

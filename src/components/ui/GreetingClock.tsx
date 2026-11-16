@@ -77,13 +77,12 @@ export function GreetingClock({ variant = 'compact' }: { variant?: 'compact' | '
 
   if (variant === 'topbar') {
     return (
-      <div className="live-clock-topbar" title={greeting.subtext}>
+      <div className="live-clock-topbar">
         <span className="live-pulse" />
         <Icon size={14} style={{ color: greeting.color }} />
         <span className="greeting-text"><strong>{greeting.text}</strong></span>
         <span className="divider-dot">•</span>
         <span className="clock-time"><Clock size={12} className="inline mr-1" />{timeStr || '--:--:--'}</span>
-        <span className="clock-subtext hidden xl:inline">({greeting.subtext})</span>
       </div>
     )
   }

@@ -1,13 +1,10 @@
 import { ArrowUpRight, MapPin } from 'lucide-react'
-import { GOOGLE_BUSINESS_PROFILE_URL } from '@/lib/location'
+import { GoogleMapsLink } from './GoogleMapsLink'
 
 export function LocationMapPreview({ className = '' }: { className?: string }) {
   return (
-    <a
+    <GoogleMapsLink
       className={`location-map-preview ${className}`.trim()}
-      href={GOOGLE_BUSINESS_PROFILE_URL}
-      target="_blank"
-      rel="noopener noreferrer"
       aria-label="Open Tejas Enterprises location in Maps"
     >
       <img
@@ -19,6 +16,6 @@ export function LocationMapPreview({ className = '' }: { className?: string }) {
         decoding="async"
       />
       <span className="location-map-preview-action"><MapPin size={17} aria-hidden="true" /> Open in Maps <ArrowUpRight size={17} aria-hidden="true" /></span>
-    </a>
+    </GoogleMapsLink>
   )
 }

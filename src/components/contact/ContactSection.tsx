@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/Button'
 import Link from 'next/link'
 import { MapPin, Phone, Clock, Send } from 'lucide-react'
 import { GOOGLE_BUSINESS_PROFILE_URL } from '@/lib/location'
+import { GoogleMapsLink } from '@/components/location/GoogleMapsLink'
 
 const contactInfo = [
   {
@@ -61,16 +62,15 @@ export function ContactSection() {
                         <p key={i} className="text-sm">{detail}</p>
                       ))}
                     </div>
-                    {item.link && (
-                      <a
-                        href={item.link.href}
-                        target={item.link.href.startsWith('http') ? '_blank' : undefined}
-                        rel={item.link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                        className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-electric-400 hover:text-electric-300 transition-colors"
-                      >
+                    {item.link && (item.link.href === GOOGLE_BUSINESS_PROFILE_URL ? (
+                      <GoogleMapsLink className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-electric-400 hover:text-electric-300 transition-colors">
+                        {item.link.label} <Send className="w-4 h-4" aria-hidden="true" />
+                      </GoogleMapsLink>
+                    ) : (
+                      <a href={item.link.href} className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-electric-400 hover:text-electric-300 transition-colors">
                         {item.link.label} <Send className="w-4 h-4" aria-hidden="true" />
                       </a>
-                    )}
+                    ))}
                   </div>
                 </div>
               </article>

@@ -137,14 +137,6 @@ export function Hero({ content }: { content: SiteContent }) {
           </div>
         </div>
 
-        <aside className="hero-note">
-          <div className="hero-note-icon">☀</div>
-          <div>
-            <b><T hi="25 वर्ष की गारंटी">25-Year Performance Guarantee</T></b>
-            <small><T hi="प्रयागराज और पूर्वांचल का नंबर 1 सोलर पार्टनर">Eastern UP&apos;s Trusted Solar Provider</T></small>
-          </div>
-        </aside>
-
       </div>
       <HeroImageSlider />
     </section>
