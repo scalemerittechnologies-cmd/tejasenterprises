@@ -283,8 +283,6 @@ export default async function HomePage() {
             <figure><img src="/images/tejas/our-office-showroom.webp" alt="Tejas Enterprises solar showroom with panel displays and customer seating" loading="lazy" /><figcaption><T hi="हमारा ऑफिस">Our office</T></figcaption></figure>
             <figure><img src="/images/tejas/awards-wall.png" alt="Solar panel mural and certificates at Tejas Enterprises" loading="lazy" /><figcaption><T hi="सोलर डिस्प्ले और प्रमाणपत्र">Solar display and certificates</T></figcaption></figure>
             <figure><img src="/images/tejas/office-banner.png" alt="Tejas Enterprises solar office banner" loading="lazy" /><figcaption><T hi="तेजस एंटरप्राइजेज़ बैनर">Tejas Enterprises banner</T></figcaption></figure>
-            <figure><img src="/images/tejas/consultation-office.webp" alt="Consultation seating and solar panel displays inside Tejas Enterprises" loading="lazy" /><figcaption><T hi="सोलर परामर्श कार्यालय">Solar consultation office</T></figcaption></figure>
-            <figure><img src="/images/tejas/enterprise-office.webp" alt="Tejas Enterprises office with solar panels, seating and product displays" loading="lazy" /><figcaption><T hi="हमारा सोलर शोरूम">Our solar showroom</T></figcaption></figure>
           </div>
         </section>
 
