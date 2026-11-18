@@ -28,6 +28,7 @@ import {
 } from 'lucide-react'
 import { Hero } from '@/components/hero/Hero'
 import { BrandTrustStrip } from '@/components/hero/BrandTrustStrip'
+import { BrandMarquee } from '@/components/hero/BrandMarquee'
 import { ProjectShowcase } from '@/components/projects/ProjectShowcase'
 import { ProjectVideos } from '@/components/projects/ProjectVideos'
 import { Navigation } from '@/components/navigation/Navigation'
@@ -134,6 +135,8 @@ export default async function HomePage() {
             }).replace(/</g, '\\u003c'),
           }}
         />
+
+        <BrandMarquee />
 
         {/* Hero Section */}
         <Hero content={content} />

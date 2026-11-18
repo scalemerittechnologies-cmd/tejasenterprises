@@ -1,0 +1,87 @@
+.strip {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  border-block: 1px solid #dce8f3;
+  background: linear-gradient(90deg, #f2f8fe 0%, #fff 46%, #f5faff 100%);
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: minmax(210px, 270px) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(18px, 3vw, 42px);
+  max-width: 1540px;
+  min-height: 110px;
+  margin: 0 auto;
+  padding: 14px clamp(16px, 3.5vw, 48px);
+}
+
+.copy { min-width: 0; }
+.eyebrow { color: #0879bc; font-size: 10px; font-weight: 800; letter-spacing: .13em; }
+.copy h2 { margin: 3px 0 2px; color: #0b305a; font-size: clamp(18px, 1.65vw, 23px); font-weight: 800; line-height: 1.2; }
+.copy p { margin: 0; color: #657990; font-size: 11px; line-height: 1.35; }
+
+.viewport {
+  min-width: 0;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  animation: brand-marquee-scroll 29s linear infinite;
+  will-change: transform;
+}
+
+.group {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 0 12px 0 0;
+  list-style: none;
+}
+
+.brand {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 215px;
+  height: 62px;
+  padding: 8px 12px;
+  border: 1px solid #dce8f3;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 5px 14px #163e6910;
+  color: #183b62;
+}
+
+.logo { display: block; width: 88px; height: 34px; flex: none; object-fit: contain; }
+.iconLogo { display: block; width: 34px; height: 34px; flex: none; object-fit: contain; }
+.brand span { min-width: 0; font-size: 12px; font-weight: 800; line-height: 1.2; white-space: nowrap; }
+
+@keyframes brand-marquee-scroll {
+  to { transform: translateX(-50%); }
+}
+
+@media (max-width: 720px) {
+  .inner { grid-template-columns: minmax(0, 1fr); gap: 10px; min-height: 0; padding: 14px 0 12px; }
+  .copy { padding-inline: 5%; text-align: center; }
+  .copy h2 { margin-top: 2px; font-size: 18px; }
+  .copy p { font-size: 10px; }
+  .brand { width: 190px; height: 55px; border-radius: 12px; }
+  .logo { width: 72px; height: 30px; }
+  .iconLogo { width: 30px; height: 30px; }
+  .brand span { font-size: 11px; }
+  .track { animation-duration: 24s; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viewport { overflow-x: auto; mask-image: none; }
+  .track { animation: none; will-change: auto; }
+}
