@@ -218,7 +218,7 @@ export function ShopVideo({
         <div className="location-action-btns">
           <GoogleMapsLink
             className="directions-link"
-            href={googleMapsDirectionsUrl(content.address)}
+            href={googleMapsDirectionsUrl()}
           >
             <NavIcon size={15} />
             <T hi="गूगल मैप्स पर रास्ता देखें">Get Google Maps Directions</T>
