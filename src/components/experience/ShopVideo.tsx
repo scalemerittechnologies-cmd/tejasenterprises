@@ -7,7 +7,6 @@ import {
   MapPin,
   Clock,
   Phone,
-  Navigation as NavIcon,
   ExternalLink,
   Sparkles,
   ShieldCheck,
@@ -15,7 +14,6 @@ import {
 import { T, useLanguage } from '@/components/language/LanguageProvider'
 import type { SiteContent } from '@/lib/site-content'
 import { EnquiryTriggerButton } from '@/components/ui/EnquiryTriggerButton'
-import { googleMapsDirectionsUrl } from '@/lib/location'
 import { GoogleMapsLink } from '@/components/location/GoogleMapsLink'
 
 export function ShopVideo({
@@ -218,10 +216,9 @@ export function ShopVideo({
         <div className="location-action-btns">
           <GoogleMapsLink
             className="directions-link"
-            href={googleMapsDirectionsUrl()}
           >
-            <NavIcon size={15} />
-            <T hi="गूगल मैप्स पर रास्ता देखें">Get Google Maps Directions</T>
+            <MapPin size={15} />
+            <T hi="गूगल मैप्स पर तेजस देखें">Open Tejas on Google Maps</T>
           </GoogleMapsLink>
 
           <a
