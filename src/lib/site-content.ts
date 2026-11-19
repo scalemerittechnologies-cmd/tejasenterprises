@@ -51,7 +51,7 @@ export const defaultSiteContent: SiteContent = {
   ],
   products: [
     { id: 'panels', name: 'Monocrystalline Solar Panels', category: 'Panels', description: 'High-efficiency Tier-1 bifacial and mono PERC solar modules with 25-year performance warranty.', image: '/images/products/golden-solar-panel-array.webp', detail: 'High power density and superior low-light generation.', quote: '', href: '/products/solar-panels' },
-    { id: 'inverters', name: 'Growatt & Smart Solar Inverters', category: 'Inverters', description: 'Smart grid-tied, hybrid, and off-grid solar inverters with live mobile app generation monitoring.', image: '/images/products/tejas-solar-energy-rooftop-banner.png', detail: 'Advanced MPPT tracking and robust surge protection.', quote: '', href: '/products/inverters' },
+    { id: 'inverters', name: 'Smart Solar Inverters', category: 'Inverters', description: 'Smart grid-tied, hybrid, and off-grid solar inverters with live mobile app generation monitoring.', image: '/images/products/tejas-solar-energy-rooftop-banner.png', detail: 'Advanced MPPT tracking and robust surge protection.', quote: '', href: '/products/inverters' },
     { id: 'batteries', name: 'Lithium & Solar Batteries', category: 'Storage', description: 'Heavy-duty tubular and LiFePO4 solar batteries for 24×7 backup during power outages.', image: '/images/products/solar-battery.svg', detail: 'Long cycle life and fast solar charging compatibility.', quote: '', href: '/products/batteries' },
   ],
   calculator: { rupeesPerUnit: 8, monthlyUnitsPerKw: 120, panelWatts: 540, costPerKwMin: 50000, costPerKwMax: 78000 },
