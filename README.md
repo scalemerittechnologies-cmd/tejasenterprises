@@ -16,4 +16,4 @@ The logo and office photos supplied by Tejas Enterprises are in `public/images/t
 
 The video section plays the supplied Tejas reel from `public/videos/tejas-shop.mp4` with a matching portrait poster. The previous video is preserved in `archive/previous-shop.mp4` and is not published on the website.
 
-The admin dashboard publishes content and uploaded photos to GitHub. Each save creates a commit and triggers the hosting deploy. Quote forms open WhatsApp directly and do not store enquiries. See [the GitHub publishing setup](docs/NEW_GITHUB_NETLIFY_DEPLOY.md).
+The admin dashboard publishes content and optimized photos to Cloudflare D1, so updates appear without a new Vercel build. GitHub publishing remains an optional fallback. Quote forms open WhatsApp directly and do not store enquiries. See [the Cloudflare and Vercel setup](docs/CLOUDFLARE_VERCEL_SETUP.md).

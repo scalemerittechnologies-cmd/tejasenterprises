@@ -10,7 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint src",
     "typecheck": "tsc --noEmit",
-    "cloudflare:setup": "node scripts/setup-cloudflare.mjs"
+    "cloudflare:setup": "node --env-file=.env.local scripts/setup-cloudflare.mjs"
   },
   "keywords": [],
   "author": "",

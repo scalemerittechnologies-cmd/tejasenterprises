@@ -44,6 +44,10 @@ async function localJson(filename) {
   }
 }
 
+async function trackedContent() {
+  return JSON.parse(await readFile(new URL('../src/content/site-content.json', import.meta.url), 'utf8'))
+}
+
 for (const [siteKey, filename] of [
   ['tejas', 'site-content.json'],
   ['tejas-enquiries', 'enquiry-settings.json'],
@@ -53,7 +57,7 @@ for (const [siteKey, filename] of [
     console.log(`${siteKey}: already in D1, kept existing data.`)
     continue
   }
-  const content = await localJson(filename)
+  const content = await localJson(filename) ?? (siteKey === 'tejas' ? await trackedContent() : null)
   if (content) {
     await query(
       'INSERT INTO site_content (site_key, content, updated_at) VALUES (?, ?, ?)',
@@ -91,4 +95,6 @@ for (const filename of filenames) {
   uploaded++
 }
 console.log(`D1 photos: ${uploaded} uploaded, ${filenames.length - uploaded} already present.`)
-console.log('Cloudflare setup complete. Deploy with the same environment variables in Netlify.')
+const tables = await query("SELECT name FROM sqlite_master WHERE type = 'table' AND name IN ('site_content', 'leads', 'media') ORDER BY name")
+if (tables.length !== 3) throw new Error('Cloudflare setup verification failed: expected three application tables.')
+console.log('Cloudflare setup complete and verified. Add the same private environment variables to Vercel before deploying.')

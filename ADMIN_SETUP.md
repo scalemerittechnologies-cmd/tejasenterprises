@@ -6,9 +6,9 @@ For this workspace, the local admin account is already configured in `.env.local
 
 The dashboard lets the administrator edit the public homepage copy, storefront and hero photos, solution cards, products, store contact details and the assumptions used by the solar-cost estimate. Image uploads accept JPEG, PNG, WebP and AVIF up to 8 MB; uploads are resized and stored as WebP. Click **Save & publish** after uploading or editing.
 
-## Persistent storage on Netlify
+## Persistent storage on Vercel
 
-Cloudflare D1 stores published content, uploaded photos and enquiries. Set `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_D1_DATABASE_ID` and `CLOUDFLARE_D1_API_TOKEN` as server-only environment variables. Follow [the Cloudflare and Netlify setup](docs/CLOUDFLARE_NETLIFY_SETUP.md) to create the database and migrate local content before deploying. Never commit the token or prefix it with `NEXT_PUBLIC_`.
+Cloudflare D1 stores published content, uploaded photos and enquiry settings. Set `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_D1_DATABASE_ID` and `CLOUDFLARE_D1_API_TOKEN` as server-only environment variables. Follow [the Cloudflare and Vercel setup](docs/CLOUDFLARE_VERCEL_SETUP.md) to initialize the database and configure Vercel before deploying. Never commit the token or prefix it with `NEXT_PUBLIC_`.
 
 Without Cloudflare variables, local development stores content and uploads in `data/`. That directory is ignored by Git and is not persistent on a serverless host. Admin photos are resized to fit D1's free tier row limit.
 

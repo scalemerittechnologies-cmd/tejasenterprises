@@ -7,10 +7,7 @@ function d1Config() {
   const accountId = process.env.CLOUDFLARE_ACCOUNT_ID?.trim()
   const databaseId = process.env.CLOUDFLARE_D1_DATABASE_ID?.trim()
   const token = process.env.CLOUDFLARE_D1_API_TOKEN?.trim()
-  if (!accountId && !databaseId && !token) {
-    if (process.env.NODE_ENV === 'production') throw new Error('Cloudflare D1 is required in production.')
-    return null
-  }
+  if (!accountId && !databaseId && !token) return null
   if (!accountIdPattern.test(accountId ?? '') || !uuid.test(databaseId ?? '') || !token) {
     throw new Error('Set a valid CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_D1_DATABASE_ID and CLOUDFLARE_D1_API_TOKEN.')
   }

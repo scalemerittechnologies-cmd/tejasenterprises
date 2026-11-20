@@ -1,6 +1,7 @@
 import 'server-only'
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { queryD1, usesCloudflareD1 } from '@/lib/cloudflare-storage'
 import { commitGithubContent, githubContentConfigured, stageGithubImage, type PendingUpload } from '@/lib/github-content'
 import trackedContent from '@/content/site-content.json'
 
@@ -106,6 +107,15 @@ function normalizeContent(stored: Partial<SiteContent>): SiteContent {
 }
 
 export async function getSiteContent(): Promise<SiteContent> {
+  if (usesCloudflareD1()) {
+    try {
+      const rows = await queryD1<{ content: string }>('SELECT content FROM site_content WHERE site_key = ? LIMIT 1', ['tejas'])
+      return normalizeContent(rows[0] ? JSON.parse(rows[0].content) as Partial<SiteContent> : trackedContent as Partial<SiteContent>)
+    } catch (error) {
+      console.error('Cloudflare D1 content read failed; serving tracked content.', error)
+      return normalizeContent(trackedContent as Partial<SiteContent>)
+    }
+  }
   if (githubContentConfigured()) return normalizeContent(trackedContent as Partial<SiteContent>)
   if (process.env.NODE_ENV === 'production') return normalizeContent(trackedContent as Partial<SiteContent>)
   try {
@@ -115,6 +125,13 @@ export async function getSiteContent(): Promise<SiteContent> {
 }
 
 export async function saveSiteContent(content: SiteContent, uploads: PendingUpload[] = []) {
+  if (usesCloudflareD1()) {
+    await queryD1(
+      'INSERT INTO site_content (site_key, content, updated_at) VALUES (?, ?, ?) ON CONFLICT(site_key) DO UPDATE SET content = excluded.content, updated_at = excluded.updated_at',
+      ['tejas', JSON.stringify(content), new Date().toISOString()],
+    )
+    return { mode: 'cloudflare' as const }
+  }
   if (githubContentConfigured()) return commitGithubContent(content, uploads)
   if (process.env.NODE_ENV === 'production') throw new Error('Admin publishing needs GitHub content credentials.')
   await mkdir(dataDir, { recursive: true })
@@ -125,6 +142,11 @@ export async function saveSiteContent(content: SiteContent, uploads: PendingUplo
 }
 
 export async function saveUploadedImage(filename: string, content: Buffer) {
+  if (usesCloudflareD1()) {
+    const { putD1Image } = await import('@/lib/cloudflare-media')
+    await putD1Image(filename, content)
+    return { url: `/api/media/${filename}` }
+  }
   if (githubContentConfigured()) return stageGithubImage(filename, content)
   if (process.env.NODE_ENV === 'production') throw new Error('Photo publishing needs GitHub content credentials.')
   const directory = path.join(dataDir, 'uploads')

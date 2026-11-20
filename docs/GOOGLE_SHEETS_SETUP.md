@@ -80,5 +80,5 @@ GOOGLE_SHEETS_WEBHOOK_TOKEN="the-same-random-secret"
 ```
 Or paste the deployed URL and the same secret into your website's Admin Panel under **Enquiries / पूछताछ**, then press **Save integration**. The secret must also be set as `ENQUIRY_TOKEN` in the Apps Script project's Script Properties.
 
-*Note: In production, enquiries are saved to Cloudflare D1 before the optional Google Sheets sync. During local development without Cloudflare credentials, they are saved in `data/leads.json`. Configure Cloudflare before deploying to Netlify; its function filesystem is not persistent storage.*
+*Note: If database-backed enquiry capture is enabled in the future, Cloudflare D1 is the durable store. The current public quote form opens WhatsApp directly and does not save customer data. Configure Cloudflare before deploying to Vercel; its function filesystem is not persistent storage.*
 

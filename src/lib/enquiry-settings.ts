@@ -1,6 +1,7 @@
 import 'server-only'
 import { readFile, writeFile, mkdir, rename } from 'node:fs/promises'
 import path from 'node:path'
+import { queryD1, usesCloudflareD1 } from '@/lib/cloudflare-storage'
 import { githubContentConfigured } from '@/lib/github-content'
 export type EnquiryPopupCopy = {
   badgeEn: string; badgeHi: string
@@ -23,6 +24,10 @@ export const defaultEnquirySettings: EnquirySettings = {
 }
 const file = path.join(process.cwd(), 'data', 'enquiry-settings.json')
 export async function getEnquirySettings(): Promise<EnquirySettings> {
+  if (usesCloudflareD1()) {
+    const rows = await queryD1<{ content: string }>('SELECT content FROM site_content WHERE site_key = ? LIMIT 1', ['tejas-enquiries'])
+    return rows[0] ? normalizeSettings(JSON.parse(rows[0].content)) : defaultEnquirySettings
+  }
   if (githubContentConfigured() || process.env.NODE_ENV === 'production') return defaultEnquirySettings
   try { return normalizeSettings(JSON.parse(await readFile(file, 'utf8'))) }
   catch { return defaultEnquirySettings }
@@ -31,6 +36,13 @@ function normalizeSettings(value: Partial<EnquirySettings> | null | undefined): 
  return { ...defaultEnquirySettings, ...value, popup: { ...defaultEnquirySettings.popup, ...value?.popup } }
 }
 export async function saveEnquirySettings(settings: EnquirySettings) {
+  if (usesCloudflareD1()) {
+    await queryD1(
+      'INSERT INTO site_content (site_key, content, updated_at) VALUES (?, ?, ?) ON CONFLICT(site_key) DO UPDATE SET content = excluded.content, updated_at = excluded.updated_at',
+      ['tejas-enquiries', JSON.stringify(settings), new Date().toISOString()],
+    )
+    return
+  }
   if (githubContentConfigured() || process.env.NODE_ENV === 'production') throw new Error('This site sends quote enquiries directly to WhatsApp and does not store enquiry data.')
   await mkdir(path.dirname(file), { recursive: true })
   const tmp = `${file}.${crypto.randomUUID()}.tmp`
