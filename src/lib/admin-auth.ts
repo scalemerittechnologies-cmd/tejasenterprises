@@ -9,7 +9,7 @@ const secret = () => process.env.ADMIN_SESSION_SECRET ?? ''
 export function adminConfigured() {
   const username = process.env.ADMIN_USERNAME ?? ''
   const password = process.env.ADMIN_PASSWORD ?? ''
-  return Boolean(username && username !== 'choose-a-private-admin-id' && password.length >= 16 && password !== 'replace-with-a-strong-unique-password' && secret().length >= 32 && !secret().startsWith('replace-with-'))
+  return Boolean(username && username !== 'choose-a-private-admin-id' && password.length >= 12 && password !== 'replace-with-a-strong-unique-password' && secret().length >= 32 && !secret().startsWith('replace-with-'))
 }
 
 function signature(payload: string) {

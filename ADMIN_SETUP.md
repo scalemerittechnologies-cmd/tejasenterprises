@@ -2,7 +2,7 @@
 
 The private dashboard is available at `/admin/login`. It uses one administrator account supplied through server-only environment variables. This workspace has a generated local account in the ignored `.env.local` file; never commit that file. New installations must choose their own credentials.
 
-For this workspace, the local admin account is already configured in `.env.local`. Restart the Next.js server and open `/admin/login` to use it. For a new installation, copy `.env.example` to `.env.local`, set a private `ADMIN_USERNAME`, choose a unique `ADMIN_PASSWORD` of at least 16 characters, and generate `ADMIN_SESSION_SECRET` with `openssl rand -base64 48`.
+For this workspace, the local admin account is already configured in `.env.local`. Restart the Next.js server and open `/admin/login` to use it. For a new installation, copy `.env.example` to `.env.local`, set a private `ADMIN_USERNAME`, choose a unique `ADMIN_PASSWORD` of at least 12 characters, and generate `ADMIN_SESSION_SECRET` with `openssl rand -base64 48`.
 
 The dashboard lets the administrator edit the public homepage copy, storefront and hero photos, solution cards, products, store contact details and the assumptions used by the solar-cost estimate. Image uploads accept JPEG, PNG, WebP and AVIF up to 8 MB; uploads are resized and stored as WebP. Click **Save & publish** after uploading or editing.
 
