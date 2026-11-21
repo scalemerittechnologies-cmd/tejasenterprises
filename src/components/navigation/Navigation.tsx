@@ -11,6 +11,7 @@ import {
   Menu,
   Phone,
   ShieldCheck,
+  Sparkles,
   X,
 } from 'lucide-react'
 import { LanguageSwitcher, T } from '@/components/language/LanguageProvider'
@@ -46,6 +47,33 @@ export function Navigation({
 
   return (
     <>
+      <div className="solar-announcement" role="region" aria-label="Solar subsidy announcement">
+        <div className="solar-announcement-badge" aria-hidden="true">
+          <Sparkles size={14} />
+          <span>Solar Update</span>
+        </div>
+        <div className="solar-announcement-window">
+          <span className="sr-only">
+            Switch to Solar. Save Electricity. Secure Your Future. Up to ₹78,000 subsidy from Central Government and ₹30,000 by State Government. Eligibility and current scheme rules apply.
+          </span>
+          <div className="solar-announcement-track" aria-hidden="true">
+            {[0, 1].map((copy) => (
+              <div className="solar-announcement-sequence" key={copy}>
+                <span className="solar-announcement-item solar-announcement-item--promise">
+                  Switch to Solar. <strong>Save Electricity.</strong> Secure Your Future.
+                </span>
+                <span className="solar-announcement-separator" />
+                <span className="solar-announcement-item solar-announcement-item--subsidy">
+                  Up to <strong>₹78,000</strong> subsidy from Central Government &amp; <strong>₹30,000</strong> by State Government
+                  <small>Eligibility &amp; current scheme rules apply</small>
+                </span>
+                <span className="solar-announcement-separator" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       <div className="topbar">
         <div className="topbar-inner">
           <div className="topbar-left">
@@ -60,9 +88,9 @@ export function Navigation({
               <ShieldCheck size={13} />
               <T hi="प्रयागराज में सोलर समाधान">Solar Solutions in Prayagraj</T>
             </span>
-            <Link href="/admin/login" className="admin-access-link">
+            <a href="/admin/login" className="admin-access-link">
               <LockKeyhole size={12} /> <T hi="एडमिन">Admin</T>
-            </Link>
+            </a>
           </div>
         </div>
       </div>
@@ -192,9 +220,9 @@ export function Navigation({
               <a href={`tel:${phone.replace(/\D/g, '')}`} className="mobile-phone-link">
                 <Phone size={16} /> <T>Call</T> {phone}
               </a>
-              <Link href="/admin/login" onClick={() => setOpen(false)} className="mobile-admin-link">
+              <a href="/admin/login" onClick={() => setOpen(false)} className="mobile-admin-link">
                 <LockKeyhole size={14} /> <T>Admin</T>
-              </Link>
+              </a>
             </div>
           </nav>
         )}

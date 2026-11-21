@@ -2866,6 +2866,99 @@ html{scroll-padding-top:var(--home-anchor-offset)}
 @media(max-width:1160px){:root{--home-anchor-offset:70px}}
 @media(max-width:420px){:root{--home-anchor-offset:64px}}
 
+/* Premium, non-blocking announcement rail above the utility bar. */
+.solar-announcement{
+  position:relative;
+  z-index:31;
+  display:flex;
+  align-items:stretch;
+  width:100%;
+  min-height:38px;
+  overflow:hidden;
+  border-bottom:1px solid #ffffff1f;
+  background:linear-gradient(105deg,#06182d 0%,#0a315c 52%,#073e63 100%);
+  color:#fff;
+  box-shadow:inset 0 -1px 0 #03101f66;
+}
+.solar-announcement:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:radial-gradient(circle at 72% -160%,#38bdf848 0 24%,transparent 48%),linear-gradient(90deg,transparent,#ffffff0a,transparent);
+}
+.solar-announcement-badge{
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex:none;
+  align-items:center;
+  gap:7px;
+  min-width:142px;
+  padding:0 20px;
+  border-right:1px solid #ffffff24;
+  background:linear-gradient(120deg,#f8b72b,#e89408);
+  color:#09213d;
+  font-size:10px;
+  font-weight:850;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+  box-shadow:8px 0 24px #020d194d;
+}
+.solar-announcement-window{display:flex;min-width:0;flex:1;align-items:center;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+.solar-announcement-track{display:flex;width:max-content;will-change:transform;animation:solar-announcement-scroll 30s linear infinite}
+.solar-announcement-sequence{display:flex;flex:none;align-items:center;gap:24px;padding-right:24px;white-space:nowrap}
+.solar-announcement-item{display:inline-flex;align-items:baseline;gap:5px;font-size:12px;font-weight:570;letter-spacing:.015em;color:#eaf5ff}
+.solar-announcement-item strong{color:#ffd168;font-size:13px;font-weight:850}
+.solar-announcement-item--promise{font-weight:650;letter-spacing:.025em}
+.solar-announcement-item--promise strong{color:#78daf8}
+.solar-announcement-item small{margin-left:8px;color:#a9bfd3;font-size:8px;font-weight:600;letter-spacing:.025em}
+.solar-announcement-separator{width:5px;height:5px;flex:none;border-radius:50%;background:#f7b72e;box-shadow:0 0 0 4px #f7b72e1f,0 0 12px #f7b72e99}
+@keyframes solar-announcement-scroll{to{transform:translateX(-50%)}}
+
+/* The additional state benefit reads as a deliberate supporting card, not an orphan grid item. */
+.hero-highlight--state-subsidy{
+  grid-column:1/-1;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:11px;
+  min-height:58px;
+  padding:9px 13px;
+  border-color:#f1d498;
+  background:linear-gradient(110deg,#fffaf0 0%,#fff 58%,#f2f8ff 100%);
+  text-align:left;
+  box-shadow:0 5px 18px #b8751112;
+}
+.hero-highlight--state-subsidy>.highlight-icon-wrap{background:linear-gradient(135deg,#fff0c2,#ffd978);color:#805000;box-shadow:inset 0 0 0 1px #e8b44b40}
+.hero-highlight--state-subsidy .highlight-text{min-width:0}
+.hero-highlight--state-subsidy .highlight-text b{font-size:12px}
+.hero-highlight--state-subsidy .highlight-text small{margin-top:2px;color:#8a5b05;font-size:10px;font-weight:750}
+.hero-highlight-terms{max-width:190px;padding-left:12px;border-left:1px solid #e8d8b7;color:#718198;font-size:8px;font-weight:600;line-height:1.45;text-align:right}
+
+@media(max-width:760px){
+  .solar-announcement{min-height:36px}
+  .solar-announcement-badge{min-width:46px;width:46px;padding:0;justify-content:center}
+  .solar-announcement-badge span{display:none}
+  .solar-announcement-window{mask-image:linear-gradient(90deg,transparent,#000 7%,#000 95%,transparent)}
+  .solar-announcement-track{animation-duration:25s}
+  .solar-announcement-sequence{gap:18px;padding-right:18px}
+  .solar-announcement-item{font-size:10px}
+  .solar-announcement-item strong{font-size:11px}
+  .solar-announcement-item small{display:none}
+}
+@media(max-width:480px){
+  .hero-highlight--state-subsidy{display:flex;grid-column:1;align-items:center;padding:11px 12px;text-align:left}
+  .hero-highlight--state-subsidy .highlight-text{flex:1}
+  .hero-highlight-terms{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .solar-announcement-window{overflow-x:auto;mask-image:none;scrollbar-width:none}
+  .solar-announcement-window::-webkit-scrollbar{display:none}
+  .solar-announcement-track{animation:none}
+  .solar-announcement-sequence:last-child{display:none}
+}
+
 /* Preserve the full branded rooftop image instead of cropping its sides. */
 .local-team-photo-wrap{height:auto;aspect-ratio:auto;display:flex;flex-direction:column;background:#f3f7fa}
 .local-team-photo-wrap img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:contain;object-position:center;flex:none}

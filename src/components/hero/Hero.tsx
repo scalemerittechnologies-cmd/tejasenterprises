@@ -5,6 +5,7 @@ import Link from 'next/link'
 import {
   ArrowRight,
   BadgeCheck,
+  Landmark,
   Leaf,
   Shield,
   Sparkles,
@@ -46,6 +47,14 @@ const benefits = [
     labelHi: 'सब्सिडी सहायता',
     sub: 'PM Surya Ghar up to ₹78,000',
     subHi: '₹78,000 तक सीधी सरकारी मदद',
+  },
+  {
+    icon: Landmark,
+    label: 'State Subsidy Support',
+    labelHi: 'राज्य सब्सिडी सहायता',
+    sub: 'Up to ₹30,000 by State Government*',
+    subHi: 'राज्य सरकार द्वारा ₹30,000 तक*',
+    featured: true,
   },
 ]
 
@@ -94,10 +103,10 @@ export function Hero({ content }: { content: SiteContent }) {
             </T>
           </p>
 
-          {/* 4 Verified Feature Cards */}
+          {/* Verified benefit cards with a dedicated state-subsidy support row */}
           <div className="hero-highlights">
-            {benefits.map(({ icon: Icon, label, labelHi, sub, subHi }) => (
-              <div key={label} className="hero-highlight">
+            {benefits.map(({ icon: Icon, label, labelHi, sub, subHi, featured }) => (
+              <div key={label} className={`hero-highlight${featured ? ' hero-highlight--state-subsidy' : ''}`}>
                 <span className="highlight-icon-wrap">
                   <Icon size={18} />
                 </span>
@@ -105,6 +114,11 @@ export function Hero({ content }: { content: SiteContent }) {
                   <b><T hi={labelHi}>{label}</T></b>
                   <small><T hi={subHi}>{sub}</T></small>
                 </div>
+                {featured && (
+                  <span className="hero-highlight-terms">
+                    <T hi="पात्रता और वर्तमान योजना के नियम लागू।">Eligibility &amp; current scheme rules apply.</T>
+                  </span>
+                )}
               </div>
             ))}
           </div>
